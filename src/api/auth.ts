@@ -18,6 +18,29 @@ export interface RestBean<T> {
   message?: string
 }
 
+// 注册参数
+export interface RegisterParams {
+  email: string
+  username: string
+  password: string
+  code: string
+}
+
+// 注册
+export const register = async (data: RegisterParams): Promise<RestBean<null>> => {
+  return await http.post<RestBean<null>>('/auth/register', data)
+}
+
+// 获取验证码
+export const askCode = async (email: string, type: string): Promise<RestBean<null>> => {
+  return await http.get<RestBean<null>>('/auth/ask-code', {
+    params: {
+      email,
+      type
+    }
+  })
+}
+
 // 登录
 export const login = async (data: LoginParams): Promise<RestBean<AuthorizeVO>> => {
   const params = new URLSearchParams()

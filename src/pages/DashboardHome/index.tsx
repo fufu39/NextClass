@@ -325,13 +325,13 @@ const DashboardHome = () => {
                                 </div>
                             </div>
                             <div className={styles.statsContent}>
-                                <Text style={{ fontSize: 36, fontWeight: 700 }}>24.5</Text>
+                                <Text style={{ fontSize: 36, fontWeight: 700 }}>0.00</Text>
                                 <Text type="secondary"> 小时</Text>
                             </div>
-                            <Progress percent={75} strokeColor="#101010" showInfo={false} size="small" />
+                            <Progress percent={0} strokeColor="#101010" showInfo={false} size="small" />
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
                                 <Text type="secondary" style={{ fontSize: 12 }}>目标: 32h</Text>
-                                <Text type="secondary" style={{ fontSize: 12 }}>75%</Text>
+                                <Text type="secondary" style={{ fontSize: 12 }}>0%</Text>
                             </div>
                         </Card>
                     </motion.div>

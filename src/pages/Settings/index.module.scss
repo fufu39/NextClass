@@ -9,12 +9,12 @@
   &::before {
     content: '';
     position: absolute;
-    top: -200px;
-    right: -200px;
+    top: -330px;
+    right: -330px;
     width: 800px;
     height: 800px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(24, 144, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+    background: radial-gradient(circle, rgba(24, 144, 255, 0.20) 0%, rgba(255, 255, 255, 0) 70%);
     z-index: 0;
     pointer-events: none;
   }
@@ -23,11 +23,11 @@
     content: '';
     position: absolute;
     bottom: -100px;
-    left: -100px;
-    width: 400px;
-    height: 400px;
+    left: -150px;
+    width: 500px;
+    height: 500px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(82, 196, 26, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+    background: radial-gradient(circle, rgba(82, 196, 26, 0.14) 0%, rgba(255, 255, 255, 0) 70%);
     z-index: 0;
     pointer-events: none;
   }
@@ -170,7 +170,7 @@
 .avatarSection {
   display: flex;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   padding: 24px;
   background: #fafafa;
   border-radius: 12px;

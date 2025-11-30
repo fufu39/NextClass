@@ -132,10 +132,10 @@ const AIChat = () => {
       <div className={styles.chatContainer}>
         <div className={styles.messageList}>
           {messages.length === 0 && (
-            <div style={{ textAlign: 'center', color: '#9ca3af', marginTop: 40 }}>
-              <RobotOutlined style={{ fontSize: 48, marginBottom: 16, opacity: 0.5 }} />
-              <p>你好！我是你的智能课表助手。</p>
-              <p>你可以问我："今天有什么课？" 或 "明天上午有课吗？"</p>
+            <div className={styles.emptyPrompt}>
+              <RobotOutlined className={styles.emptyIcon} />
+              <p className={styles.emptyTitle}>你好！我是你的智能课表助手。</p>
+              <p className={styles.emptySub}>你可以问我："今天有什么课？" 或 "明天上午有课吗？"</p>
             </div>
           )}
 

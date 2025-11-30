@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import { Button, Select, Spin, Card, Typography, App, Modal, Form, Input, DatePicker, Upload, Checkbox } from 'antd';
 import { UploadOutlined, CalendarOutlined, LeftOutlined, RightOutlined, InboxOutlined } from '@ant-design/icons';
 import type { CourseVO } from '../../api/schedule';
@@ -81,7 +82,7 @@ const Schedule = () => {
       }
     } catch (error) {
       console.error('Failed to check import status', error);
-      // message.error('无法获取课表状态');
+      message.error(error.message || '无法获取课表状态');
     } finally {
       setImportChecking(false);
       setLoading(false);
@@ -108,7 +109,7 @@ const Schedule = () => {
       }
     } catch (error) {
       console.error('Failed to fetch schedule', error);
-      // message.error('获取课表失败');
+      message.error(error.message || '获取课表失败');
     } finally {
       setScheduleLoading(false);
     }
@@ -263,6 +264,7 @@ const Schedule = () => {
           name="startDate"
           label="学期开始日期"
           rules={[{ required: true, message: '请选择开始日期' }]}
+          initialValue={dayjs('2025-09-01')}
         >
           <DatePicker style={{ width: '100%' }} placeholder="选择日期" />
         </Form.Item>

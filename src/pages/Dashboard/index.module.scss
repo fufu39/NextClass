@@ -123,6 +123,6 @@
 .contentBody {
   flex: 1;
   padding: 32px;
-  overflow-y: auto;
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
