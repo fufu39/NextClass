@@ -10,11 +10,17 @@ function App() {
       theme={{
         algorithm: theme.defaultAlgorithm,
         token: {
-          colorPrimary: '#ff005c',
-          colorInfo: '#0066ff',
+          colorPrimary: '#1890ff',
+          colorSuccess: '#2ed573',
+          colorWarning: '#ffa502',
+          colorError: '#ff4757',
+          colorInfo: '#1890ff',
           colorBgBase: '#ffffff',
+          colorBgLayout: '#f8f9fa',
           colorTextBase: '#101010',
-          borderRadius: 16
+          colorLink: '#1890ff',
+          borderRadius: 16,
+          fontFamily: "Poppins, Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif"
         }
       }}
     >
