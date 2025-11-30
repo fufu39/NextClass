@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Input, Button, Checkbox, App } from 'antd'
+import { Form, Input, Button, Checkbox, App, Spin } from 'antd'
 import {
   UserOutlined,
   LockOutlined,
@@ -9,7 +9,8 @@ import {
   HomeOutlined,
   UserAddOutlined,
   LoginOutlined,
-  SendOutlined
+  SendOutlined,
+  LoadingOutlined
 } from '@ant-design/icons'
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from 'framer-motion'
 import { useUserStore } from '../../stores/user'
@@ -20,16 +21,32 @@ const Login = () => {
   const navigate = useNavigate()
   const { message } = App.useApp()
   const [loading, setLoading] = useState(false)
-  const { setUser, setToken } = useUserStore()
+  const { token, user, setUser, setToken } = useUserStore()
   const [isRegister, setIsRegister] = useState(false)
   const [form] = Form.useForm()
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+
+  // Check for existing token on mount
+  useEffect(() => {
+    if (token) {
+      // If token exists, show loading animation then redirect
+      const timer = setTimeout(() => {
+        message.success('欢迎回来！')
+        navigate('/dashboard')
+      }, 1500)
+      return () => clearTimeout(timer)
+    } else {
+      // No token, show login form
+      setIsCheckingAuth(false)
+    }
+  }, [token, navigate, message])
 
   // Timer state for verification code
   const [countdown, setCountdown] = useState(0)
   const [isSendingCode, setIsSendingCode] = useState(false)
 
   useEffect(() => {
-    let timer: NodeJS.Timeout
+    let timer: ReturnType<typeof setTimeout>
     if (countdown > 0) {
       timer = setTimeout(() => {
         setCountdown((prev) => prev - 1)
@@ -37,8 +54,6 @@ const Login = () => {
     }
     return () => clearTimeout(timer)
   }, [countdown])
-
-  const initialRemember = useMemo(() => localStorage.getItem('rememberMe') === 'true', [])
 
   // Login form values state
   const [loginInitialValues, setLoginInitialValues] = useState({
@@ -174,9 +189,9 @@ const Login = () => {
       <motion.button
         className={styles.homeBtn}
         onClick={() => navigate('/')}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.5 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
       >
         <HomeOutlined /> Back to Home
       </motion.button>
@@ -220,160 +235,207 @@ const Login = () => {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div
-          className={styles.switchIcon}
-          onClick={() => setIsRegister(!isRegister)}
-          title={isRegister ? "Switch to Login" : "Switch to Register"}
-        >
-          {isRegister ? <LoginOutlined /> : <UserAddOutlined />}
-        </div>
-
-        <AnimatePresence mode="wait" initial={false}>
-          {!isRegister ? (
+        <AnimatePresence mode="wait">
+          {isCheckingAuth ? (
             <motion.div
-              key="login"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.3 }}
-              style={{ width: '100%' }}
+              key="checking"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              className={styles.loadingState}
             >
-              <h1 className={styles.title}>Login.</h1>
-
-              <Form
-                name="login"
-                onFinish={onLoginFinish}
-                autoComplete="off"
-                layout="vertical"
-                size="large"
-                className={styles.form}
-                initialValues={loginInitialValues}
+              <motion.div
+                className={styles.welcomeAvatar}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
               >
-                <Form.Item
-                  name="username"
-                  rules={[
-                    { required: true, message: '请输入用户名' },
-                    { min: 3, message: '用户名至少3个字符' }
-                  ]}
-                >
-                  <Input prefix={<UserOutlined />} placeholder="Username / Email" />
-                </Form.Item>
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={user.username} />
+                ) : (
+                  // user?.username?.[0]?.toUpperCase() || <UserOutlined />
+                  <UserOutlined />
+                )}
+              </motion.div>
 
-                <Form.Item
-                  name="password"
-                  rules={[
-                    { required: true, message: '请输入密码' },
-                    { min: 6, message: '密码至少6个字符' }
-                  ]}
-                >
-                  <Input.Password prefix={<LockOutlined />} placeholder="Password" />
-                </Form.Item>
+              <motion.h2
+                className={styles.welcomeText}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                Welcome back !
+              </motion.h2>
 
-                <div className={styles.actions}>
-                  <Form.Item name="remember" valuePropName="checked" noStyle>
-                    <Checkbox>Remember me</Checkbox>
-                  </Form.Item>
-                  <Button type="link" className={styles.forgot} onClick={() => message.info('请联系管理员重置密码')}>
-                    Forgot password?
-                  </Button>
-                </div>
-
-                <Form.Item style={{ marginBottom: 0 }}>
-                  <button
-                    type="submit"
-                    className={`${styles.submitBtn} ${loading ? styles.loading : ''}`}
-                    disabled={loading}
-                  >
-                    {loading ? 'Signing in...' : 'Sign In'}
-                  </button>
-                </Form.Item>
-              </Form>
+              <motion.div
+                className={styles.loadingText}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <Spin indicator={<LoadingOutlined style={{ fontSize: 18, color: '#6366f1' }} spin />} />
+                <span>正在进入系统...</span>
+              </motion.div>
             </motion.div>
           ) : (
-            <motion.div
-              key="register"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 50 }}
-              transition={{ duration: 0.3 }}
-              style={{ width: '100%' }}
-            >
-              <h1 className={styles.title}>Register.</h1>
-
-              <Form
-                form={form}
-                name="register"
-                onFinish={onRegisterFinish}
-                autoComplete="off"
-                layout="vertical"
-                size="large"
-                className={styles.form}
+            <>
+              <div
+                className={styles.switchIcon}
+                onClick={() => setIsRegister(!isRegister)}
+                title={isRegister ? "Switch to Login" : "Switch to Register"}
               >
-                <Form.Item
-                  name="email"
-                  rules={[
-                    { required: true, message: '请输入邮箱' },
-                    { pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: '请输入有效的邮箱地址' }
-                  ]}
-                >
-                  <Input prefix={<MailOutlined />} placeholder="Email" />
-                </Form.Item>
+                {isRegister ? <LoginOutlined /> : <UserAddOutlined />}
+              </div>
 
-                <Form.Item
-                  name="username"
-                  rules={[
-                    { required: true, message: '请输入用户名' },
-                    { min: 3, message: '用户名至少3个字符' }
-                  ]}
-                >
-                  <Input prefix={<UserOutlined />} placeholder="Username" />
-                </Form.Item>
-
-                <Form.Item
-                  name="password"
-                  rules={[
-                    { required: true, message: '请输入密码' },
-                    { min: 6, message: '密码至少6个字符' }
-                  ]}
-                >
-                  <Input.Password prefix={<LockOutlined />} placeholder="Password" />
-                </Form.Item>
-
-                <Form.Item
-                  name="code"
-                  rules={[
-                    { required: true, message: '请输入验证码' }
-                  ]}
-                >
-                  <Input
-                    prefix={<SafetyCertificateOutlined />}
-                    placeholder="Verification Code"
-                    suffix={
-                      <Button
-                        type="text"
-                        onClick={handleSendCode}
-                        disabled={countdown > 0 || isSendingCode}
-                        loading={isSendingCode}
-                        className={styles.codeBtn}
-                        icon={countdown === 0 && <SendOutlined />}
-                      >
-                        {countdown > 0 ? `${countdown}s` : 'Send'}
-                      </Button>
-                    }
-                  />
-                </Form.Item>
-
-                <Form.Item style={{ marginBottom: 0, marginTop: 24 }}>
-                  <button
-                    type="submit"
-                    className={`${styles.submitBtn} ${loading ? styles.loading : ''}`}
-                    disabled={loading}
+              <AnimatePresence mode="wait" initial={false}>
+                {!isRegister ? (
+                  <motion.div
+                    key="login"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ width: '100%' }}
                   >
-                    {loading ? 'Registering...' : 'Register'}
-                  </button>
-                </Form.Item>
-              </Form>
-            </motion.div>
+                    <h1 className={styles.title}>Login.</h1>
+
+                    <Form
+                      name="login"
+                      onFinish={onLoginFinish}
+                      autoComplete="off"
+                      layout="vertical"
+                      size="large"
+                      className={styles.form}
+                      initialValues={loginInitialValues}
+                    >
+                      <Form.Item
+                        name="username"
+                        rules={[
+                          { required: true, message: '请输入用户名' },
+                          { min: 3, message: '用户名至少3个字符' }
+                        ]}
+                      >
+                        <Input prefix={<UserOutlined />} placeholder="Username / Email" />
+                      </Form.Item>
+
+                      <Form.Item
+                        name="password"
+                        rules={[
+                          { required: true, message: '请输入密码' },
+                          { min: 6, message: '密码至少6个字符' }
+                        ]}
+                      >
+                        <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+                      </Form.Item>
+
+                      <div className={styles.actions}>
+                        <Form.Item name="remember" valuePropName="checked" noStyle>
+                          <Checkbox>Remember me</Checkbox>
+                        </Form.Item>
+                        <Button type="link" className={styles.forgot} onClick={() => message.info('请联系管理员重置密码')}>
+                          Forgot password?
+                        </Button>
+                      </div>
+
+                      <Form.Item style={{ marginBottom: 0 }}>
+                        <button
+                          type="submit"
+                          className={`${styles.submitBtn} ${loading ? styles.loading : ''}`}
+                          disabled={loading}
+                        >
+                          {loading ? 'Signing in...' : 'Sign In'}
+                        </button>
+                      </Form.Item>
+                    </Form>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="register"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ width: '100%' }}
+                  >
+                    <h1 className={styles.title}>Register.</h1>
+
+                    <Form
+                      form={form}
+                      name="register"
+                      onFinish={onRegisterFinish}
+                      autoComplete="off"
+                      layout="vertical"
+                      size="large"
+                      className={styles.form}
+                    >
+                      <Form.Item
+                        name="email"
+                        rules={[
+                          { required: true, message: '请输入邮箱' },
+                          { pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: '请输入有效的邮箱地址' }
+                        ]}
+                      >
+                        <Input prefix={<MailOutlined />} placeholder="Email" />
+                      </Form.Item>
+
+                      <Form.Item
+                        name="username"
+                        rules={[
+                          { required: true, message: '请输入用户名' },
+                          { min: 3, message: '用户名至少3个字符' }
+                        ]}
+                      >
+                        <Input prefix={<UserOutlined />} placeholder="Username" />
+                      </Form.Item>
+
+                      <Form.Item
+                        name="password"
+                        rules={[
+                          { required: true, message: '请输入密码' },
+                          { min: 6, message: '密码至少6个字符' }
+                        ]}
+                      >
+                        <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+                      </Form.Item>
+
+                      <Form.Item
+                        name="code"
+                        rules={[
+                          { required: true, message: '请输入验证码' }
+                        ]}
+                      >
+                        <Input
+                          prefix={<SafetyCertificateOutlined />}
+                          placeholder="Verification Code"
+                          suffix={
+                            <Button
+                              type="text"
+                              onClick={handleSendCode}
+                              disabled={countdown > 0 || isSendingCode}
+                              loading={isSendingCode}
+                              className={styles.codeBtn}
+                              icon={countdown === 0 && <SendOutlined />}
+                            >
+                              {countdown > 0 ? `${countdown}s` : 'Send'}
+                            </Button>
+                          }
+                        />
+                      </Form.Item>
+
+                      <Form.Item style={{ marginBottom: 0, marginTop: 24 }}>
+                        <button
+                          type="submit"
+                          className={`${styles.submitBtn} ${loading ? styles.loading : ''}`}
+                          disabled={loading}
+                        >
+                          {loading ? 'Registering...' : 'Register'}
+                        </button>
+                      </Form.Item>
+                    </Form>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
           )}
         </AnimatePresence>
       </motion.div>

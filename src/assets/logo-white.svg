@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" fill="none">
-  <rect width="200" height="50" rx="0" fill="transparent"/>
-  <path d="M15 10 L25 10 L35 30 L45 10 L55 10 L55 40 L45 40 L45 20 L35 40 L35 40 L25 20 L25 40 L15 40 Z" fill="#FFFFFF"/>
-  <text x="65" y="35" font-family="Arial, sans-serif" font-weight="bold" font-size="28" fill="#FFFFFF">NextClass</text>
-</svg>

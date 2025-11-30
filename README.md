@@ -1,7 +1,7 @@
 # NextClass 智课表
 
 <div align="center">
-<img src="./src/assets/logo-white.svg" alt="NextClass Logo" width="240" />
+<img src="./src/assets/logo.png" alt="NextClass Logo" width="280" />
 
 <h3>NextClass 智课表</h3>
 <p>基于 AI 图像识别和订阅推送的现代化智能课表管理系统</p>

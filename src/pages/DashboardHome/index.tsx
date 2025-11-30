@@ -46,11 +46,9 @@ const DashboardHome = () => {
     const [currentTime, setCurrentTime] = useState(dayjs())
     const [selectedDate, setSelectedDate] = useState(dayjs())
     const [scheduleList, setScheduleList] = useState<CourseVO[]>([])
-    const [loading, setLoading] = useState(false)
 
     const fetchSchedule = useCallback(async (date: Dayjs) => {
         try {
-            setLoading(true)
             const res = await getScheduleByDate(date.format('YYYY-MM-DD'))
             console.log(res);
             if (res.code === 200) {
@@ -62,8 +60,6 @@ const DashboardHome = () => {
         } catch (error) {
             console.error('Fetch schedule error:', error)
             message.error('获取课表失败')
-        } finally {
-            setLoading(false)
         }
     }, [message])
 

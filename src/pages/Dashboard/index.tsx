@@ -12,7 +12,7 @@ import {
 import { App, Avatar, Breadcrumb } from 'antd'
 import { useUserStore } from '../../stores/user'
 import styles from './index.module.scss'
-import logo from '../../assets/logo.svg'
+import logo from '../../assets/logo.png'
 
 const DashboardLayout = () => {
   const navigate = useNavigate()
@@ -95,14 +95,12 @@ const DashboardLayout = () => {
               ]}
             />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontWeight: 500, fontSize: 15 }}>{user.username}</span>
-            <div
-              style={{ cursor: 'pointer' }}
-              onClick={() => navigate('/dashboard/settings')}
-            >
-              <Avatar icon={<UserOutlined />} style={{ backgroundColor: '#101010' }} />
-            </div>
+          <div
+            className={styles.userProfile}
+            onClick={() => navigate('/dashboard/settings')}
+          >
+            <span className={styles.username}>{user.username}</span>
+            <Avatar icon={<UserOutlined />} style={{ backgroundColor: '#101010' }} />
           </div>
         </div>
         <div className={styles.contentBody}>

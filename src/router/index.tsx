@@ -7,6 +7,7 @@ import DashboardHome from '../pages/DashboardHome'
 import Schedule from '../pages/Schedule'
 import Settings from '../pages/Settings'
 import AIChat from '../pages/AIChat'
+import NotFound from '../pages/NotFound'
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
             element: <AIChat />
           }
         ]
+      },
+      {
+        path: '*',
+        element: <NotFound />
       }
     ]
   }
