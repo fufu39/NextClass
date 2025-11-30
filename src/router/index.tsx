@@ -2,7 +2,11 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import App from '../App'
 import Home from '../pages/Home'
 import Login from '../pages/Login'
-import Dashboard from '../pages/Dashboard'
+import DashboardLayout from '../pages/Dashboard'
+import DashboardHome from '../pages/DashboardHome'
+import Schedule from '../pages/Schedule'
+import Settings from '../pages/Settings'
+import AIChat from '../pages/AIChat'
 
 const router = createBrowserRouter([
   {
@@ -23,7 +27,25 @@ const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <Dashboard />
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <DashboardHome />
+          },
+          {
+            path: 'schedule',
+            element: <Schedule />
+          },
+          {
+            path: 'settings',
+            element: <Settings />
+          },
+          {
+            path: 'ai-chat',
+            element: <AIChat />
+          }
+        ]
       }
     ]
   }

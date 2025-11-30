@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Input, Button, Checkbox, message } from 'antd'
+import { Form, Input, Button, Checkbox, App } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
 import { useUserStore } from '../../stores/user'
@@ -9,11 +9,13 @@ import styles from './index.module.scss'
 
 const Login = () => {
   const navigate = useNavigate()
+  const { message } = App.useApp()
   const [loading, setLoading] = useState(false)
   const { setUser, setToken } = useUserStore()
 
   const initialRemember = useMemo(() => localStorage.getItem('rememberMe') === 'true', [])
-  const initialUsername = useMemo(() => localStorage.getItem('rememberUsername') || '', [])
+  // 默认用户名：如果本地没有记录，则使用要求的默认值
+  const initialUsername = useMemo(() => localStorage.getItem('rememberUsername') || '2090660718@qq.com', [])
 
   // Parallax mouse values (Same as Home)
   const mouseX = useMotionValue(0)
@@ -40,23 +42,37 @@ const Login = () => {
   const onFinish = async (values: { username: string; password: string; remember?: boolean }) => {
     try {
       setLoading(true)
-      const response = await login(values)
+      const response = await login({
+        username: values.username,
+        password: values.password
+      })
+      console.log(response)
+      
+      if (response.code === 200) {
+        const authData = response.data
 
-      // 保存用户信息
-      setUser(response.user)
-      setToken(response.token)
-      localStorage.setItem('token', response.token)
+        // 保存用户信息
+        setUser({
+          username: authData.username,
+          role: authData.role,
+          expire: authData.expire
+        })
+        setToken(authData.token)
+        localStorage.setItem('token', authData.token)
 
-      if (values.remember) {
-        localStorage.setItem('rememberMe', 'true')
-        localStorage.setItem('rememberUsername', values.username)
+        if (values.remember) {
+          localStorage.setItem('rememberMe', 'true')
+          localStorage.setItem('rememberUsername', values.username)
+        } else {
+          localStorage.removeItem('rememberMe')
+          localStorage.removeItem('rememberUsername')
+        }
+
+        message.success('登录成功！')
+        navigate('/dashboard')
       } else {
-        localStorage.removeItem('rememberMe')
-        localStorage.removeItem('rememberUsername')
+        message.error(response.message || '登录失败')
       }
-
-      message.success('登录成功！')
-      navigate('/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '登录失败'
       message.error(errorMessage)
@@ -117,6 +133,7 @@ const Login = () => {
           className={styles.form}
           initialValues={{
             username: initialUsername,
+            password: '123456', // 设置默认密码
             remember: initialRemember,
           }}
         >
@@ -144,7 +161,7 @@ const Login = () => {
             <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
-            <Button type="link" className={styles.forgot} onClick={() => message.info('找回功能待实现...')}>
+            <Button type="link" className={styles.forgot} onClick={() => message.info('请联系管理员重置密码')}>
               Forgot password?
             </Button>
           </div>

@@ -12,10 +12,10 @@ const http = axios.create({
 http.interceptors.request.use(
   (config) => {
     // 添加认证token等
-    // const token = localStorage.getItem('token')
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`
-    // }
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (error) => {

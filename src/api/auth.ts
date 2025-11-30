@@ -5,36 +5,29 @@ export interface LoginParams {
   password: string
 }
 
-export interface LoginResponse {
+export interface AuthorizeVO {
+  username: string
+  role: string
   token: string
-  user: {
-    id: number
-    username: string
-    email: string
-  }
+  expire: string
+}
+
+export interface RestBean<T> {
+  code: number
+  data: T
+  message?: string
 }
 
 // 登录
-export const login = async (data: LoginParams): Promise<LoginResponse> => {
-  const res = await http.post<LoginResponse>('/auth/login', data)
-  return res as unknown as LoginResponse
-}
+export const login = async (data: LoginParams): Promise<RestBean<AuthorizeVO>> => {
+  const params = new URLSearchParams()
+  params.append('username', data.username)
+  params.append('password', data.password)
 
-// 注册
-export const register = async (
-  data: LoginParams & { email: string }
-): Promise<LoginResponse> => {
-  const res = await http.post<LoginResponse>('/auth/register', data)
-  return res as unknown as LoginResponse
-}
-
-// 登出
-export const logout = () => {
-  return http.post('/auth/logout')
-}
-
-// 刷新token
-export const refreshToken = async (): Promise<{ token: string }> => {
-  const res = await http.post<{ token: string }>('/auth/refresh')
-  return res as unknown as { token: string }
+  const res = await http.post<RestBean<AuthorizeVO>>('/auth/login', params, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+  return res as unknown as RestBean<AuthorizeVO>
 }

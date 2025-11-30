@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import { ConfigProvider, theme } from 'antd'
+import { ConfigProvider, theme, App as AntdApp } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import 'antd/dist/reset.css'
 
@@ -10,21 +10,23 @@ function App() {
       theme={{
         algorithm: theme.defaultAlgorithm,
         token: {
-          colorPrimary: '#1890ff',
+          colorPrimary: '#333333',
           colorSuccess: '#2ed573',
           colorWarning: '#ffa502',
           colorError: '#ff4757',
-          colorInfo: '#1890ff',
+          colorInfo: '#333333',
           colorBgBase: '#ffffff',
-          colorBgLayout: '#f8f9fa',
+          colorBgLayout: '#f5f7f9',
           colorTextBase: '#101010',
-          colorLink: '#1890ff',
+          colorLink: '#101010',
           borderRadius: 16,
           fontFamily: "Poppins, Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif"
         }
       }}
     >
-      <Outlet />
+      <AntdApp>
+        <Outlet />
+      </AntdApp>
     </ConfigProvider>
   )
 }
