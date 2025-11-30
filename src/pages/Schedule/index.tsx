@@ -81,7 +81,7 @@ const Schedule = () => {
       }
     } catch (error) {
       console.error('Failed to check import status', error);
-      message.error('无法获取课表状态');
+      // message.error('无法获取课表状态');
     } finally {
       setImportChecking(false);
       setLoading(false);
@@ -108,7 +108,7 @@ const Schedule = () => {
       }
     } catch (error) {
       console.error('Failed to fetch schedule', error);
-      message.error('获取课表失败');
+      // message.error('获取课表失败');
     } finally {
       setScheduleLoading(false);
     }

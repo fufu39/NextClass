@@ -6,12 +6,19 @@ export interface User {
   email: string
   avatar?: string
   createdAt: string
+  emailSubscription?: boolean
 }
 
 export interface UpdateUserProfile {
   username?: string
   email?: string
   avatar?: string
+  emailSubscription?: boolean
+}
+
+export interface ChangePasswordParams {
+  oldPassword?: string
+  newPassword?: string
 }
 
 // 获取用户信息
@@ -26,4 +33,9 @@ export const updateUserProfile = async (
 ): Promise<User> => {
   const res = await http.put<User>('/user/profile', data)
   return res as unknown as User
+}
+
+// 修改密码
+export const changePassword = async (data: ChangePasswordParams): Promise<void> => {
+  await http.put('/user/password', data)
 }

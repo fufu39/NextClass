@@ -5,6 +5,9 @@ interface User {
   username: string
   role: string
   expire?: string
+  email?: string
+  emailSubscription?: boolean
+  avatar?: string
 }
 
 interface UserState {

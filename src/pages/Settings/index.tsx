@@ -1,12 +1,287 @@
-import { SettingOutlined } from '@ant-design/icons'
+import { useState, useEffect } from 'react'
+import { Form, Input, Button, message, Switch, Tabs, Tag } from 'antd'
+import { UserOutlined, LockOutlined, BellOutlined, SafetyOutlined, SettingOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import { getUserProfile, updateUserProfile, changePassword } from '../../api/user'
+import { useUserStore } from '../../stores/user'
+import styles from './index.module.scss'
 
 const Settings = () => {
+  const [form] = Form.useForm()
+  const [passwordForm] = Form.useForm()
+  const [loading, setLoading] = useState(false)
+  const { user: storeUser, setUser: setStoreUser } = useUserStore()
+  const [emailSubscription, setEmailSubscription] = useState(false)
+
+  // Initialize form with store data immediately
+  useEffect(() => {
+    if (storeUser) {
+      form.setFieldsValue({
+        username: storeUser.username,
+        email: storeUser.email || '无法修改邮箱' // Fallback if email is missing in store
+      })
+      if (storeUser.emailSubscription !== undefined) {
+        setEmailSubscription(storeUser.emailSubscription)
+      }
+    }
+  }, [storeUser, form])
+
+  // Fetch latest profile from API
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const data = await getUserProfile()
+        // Update local state
+        form.setFieldsValue({
+          username: data.username,
+          email: data.email,
+        })
+        setEmailSubscription(!!data.emailSubscription)
+
+        // Update store with latest data (including email)
+        if (storeUser) {
+          setStoreUser({
+            ...storeUser,
+            email: data.email,
+            emailSubscription: !!data.emailSubscription,
+            avatar: data.avatar
+          })
+        }
+      } catch (error) {
+        console.error('Failed to fetch profile', error)
+        // Fallback is already handled by initial store load
+      }
+    }
+    fetchUserProfile()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Only run on mount
+
+  const handleUpdateProfile = async (values: { username: string }) => {
+    setLoading(true)
+    try {
+      // Simulate API or Real API
+      // For now, we mock it but keep the logic sound
+      await updateUserProfile({ username: values.username })
+
+      // Update store
+      if (storeUser) {
+        setStoreUser({
+          ...storeUser,
+          username: values.username
+        })
+      }
+      message.success('个人资料更新成功')
+    } catch {
+      message.error('更新失败')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePasswordChange = async (values: { oldPassword: string; newPassword: string }) => {
+    // 暂时禁用API调用
+    // try {
+    //   await changePassword({
+    //     oldPassword: values.oldPassword,
+    //     newPassword: values.newPassword
+    //   })
+    //   message.success('密码修改成功')
+    //   passwordForm.resetFields()
+    // } catch {
+    //   message.error('密码修改失败')
+    // }
+    message.info('修改密码接口待开放')
+  }
+
+  const handleSubscriptionChange = async (checked: boolean) => {
+    setEmailSubscription(checked)
+    try {
+      // Update via API
+      await updateUserProfile({ emailSubscription: checked })
+
+      // Update store
+      if (storeUser) {
+        setStoreUser({
+          ...storeUser,
+          emailSubscription: checked
+        })
+      }
+      message.success(checked ? '已开启课程邮件提醒' : '已关闭课程邮件提醒')
+    } catch {
+      message.error('设置失败')
+      setEmailSubscription(!checked) // Revert on error
+    }
+  }
+
+  const items = [
+    {
+      key: 'notification',
+      label: <div className={styles.tabLabel}><BellOutlined /> <span>通知设置</span></div>,
+      children: (
+        <div className={styles.tabContent}>
+          <div className={styles.sectionTitle}>
+            <h2>通知偏好</h2>
+            <p>选择您希望接收的通知类型</p>
+          </div>
+
+          <div className={`${styles.notificationItem} ${emailSubscription ? styles.active : ''} ${styles.recommended}`}>
+            <div className={styles.info}>
+              <h4>
+                课程邮件提醒
+                <Tag color="red" style={{ marginLeft: 8 }}>推荐开启</Tag>
+              </h4>
+              <p>开启后，系统将在课程开始前15分钟发送邮件提醒，确保您不会错过任何重要课程。</p>
+            </div>
+            <Switch checked={emailSubscription} onChange={handleSubscriptionChange} />
+          </div>
+
+          <div className={styles.notificationItem} style={{ opacity: 0.6 }}>
+            <div className={styles.info}>
+              <h4>系统公告通知</h4>
+              <p>接收关于系统维护、新功能上线等重要通知。</p>
+            </div>
+            <Switch disabled />
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'general',
+      label: <div className={styles.tabLabel}><UserOutlined /> <span>个人资料</span></div>,
+      children: (
+        <div className={styles.tabContent}>
+          <div className={styles.sectionTitle}>
+            <h2>个人资料</h2>
+            <p>管理您的个人信息和账户详情</p>
+          </div>
+
+          <div className={styles.avatarSection}>
+            <div className={styles.avatar}>
+              {storeUser?.avatar ? <img src={storeUser.avatar} alt="avatar" style={{ width: '100%', borderRadius: '50%' }} /> : <UserOutlined />}
+            </div>
+            <div className={styles.avatarInfo}>
+              <h3>{storeUser?.username || 'User'}</h3>
+              <Button type="link" className={styles.uploadBtn}>更换头像</Button>
+            </div>
+          </div>
+
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleUpdateProfile}
+            className={styles.formSection}
+          >
+            <Form.Item
+              label="用户名"
+              name="username"
+              rules={[{ required: true, message: '请输入用户名' }]}
+            >
+              <Input size="large" placeholder="您的用户名" />
+            </Form.Item>
+
+            <Form.Item
+              label="邮箱地址"
+              name="email"
+              help="如需更改邮箱，请联系管理员"
+            >
+              <Input size="large" disabled style={{ color: 'rgba(0,0,0,0.65)', cursor: 'default', backgroundColor: '#f5f5f5' }} />
+            </Form.Item>
+
+            <Form.Item style={{ marginTop: 32 }}>
+              <Button type="primary" htmlType="submit" loading={loading}>
+                保存更改
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+      ),
+    },
+    {
+      key: 'security',
+      label: <div className={styles.tabLabel}><SafetyOutlined /> <span>账号安全</span></div>,
+      children: (
+        <div className={styles.tabContent}>
+          <div className={styles.sectionTitle}>
+            <h2>账号安全</h2>
+            <p>更新密码以保护您的账户安全</p>
+          </div>
+
+          <Form
+            form={passwordForm}
+            layout="vertical"
+            onFinish={handlePasswordChange}
+            className={styles.formSection}
+          >
+            <Form.Item
+              label="当前密码"
+              name="oldPassword"
+              rules={[{ required: true, message: '请输入当前密码' }]}
+            >
+              <Input.Password size="large" prefix={<LockOutlined />} placeholder="请输入当前密码" />
+            </Form.Item>
+
+            <Form.Item
+              label="新密码"
+              name="newPassword"
+              rules={[{ required: true, message: '请输入新密码' }, { min: 6, message: '密码至少6位' }]}
+            >
+              <Input.Password size="large" prefix={<LockOutlined />} placeholder="请输入新密码" />
+            </Form.Item>
+
+            <Form.Item
+              label="确认新密码"
+              name="confirmPassword"
+              dependencies={['newPassword']}
+              rules={[
+                { required: true, message: '请确认新密码' },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('newPassword') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('两次输入的密码不一致'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password size="large" prefix={<LockOutlined />} placeholder="请再次输入新密码" />
+            </Form.Item>
+
+            <Form.Item style={{ marginTop: 32 }}>
+              <Button type="primary" htmlType="submit">
+                修改密码
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+      ),
+    },
+    {
+      key: 'other',
+      label: <div className={styles.tabLabel}><SettingOutlined /> <span>其他设置</span></div>,
+      children: (
+        <div className={styles.tabContent}>
+          <div className={styles.sectionTitle}>
+            <h2>其他设置</h2>
+            <p>更多个性化选项</p>
+          </div>
+          <div style={{ padding: '40px 0', textAlign: 'center', color: '#ccc' }}>
+            更多功能正在开发中......
+          </div>
+        </div>
+      )
+    }
+  ]
+
   return (
-     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#9ca3af' }}>
-       <div style={{ textAlign: 'center' }}>
-          <SettingOutlined style={{ fontSize: 48, marginBottom: 16 }} />
-          <p>系统设置功能开发中...</p>
-       </div>
+    <div className={styles.container}>
+      <div className={styles.settingsWrapper}>
+        <Tabs
+          tabPlacement="left"
+          items={items}
+          defaultActiveKey="notification"
+          style={{ height: '100%' }}
+        />
+      </div>
     </div>
   )
 }
