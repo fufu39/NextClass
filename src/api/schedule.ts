@@ -47,12 +47,23 @@ export interface UploadScheduleParams {
   file: File
 }
 
-export const uploadScheduleImage = async (params: UploadScheduleParams): Promise<RestBean<any>> => {
+export const uploadScheduleImage = async (params: UploadScheduleParams): Promise<RestBean<unknown>> => {
   const formData = new FormData()
   formData.append('termName', params.termName)
   formData.append('startDate', params.startDate)
   formData.append('file', params.file)
 
-  const res = await http.post<RestBean<any>>('/schedule/upload-image', formData)
-  return res as unknown as RestBean<any>
+  const res = await http.post<RestBean<unknown>>('/schedule/upload-image', formData)
+  return res as unknown as RestBean<unknown>
+}
+
+// AI 问答
+export interface AskParams {
+  question: string
+  date: string
+}
+
+export const askScheduleAI = async (params: AskParams): Promise<RestBean<string>> => {
+  const res = await http.post<RestBean<string>>('/schedule/ask', params)
+  return res as unknown as RestBean<string>
 }
