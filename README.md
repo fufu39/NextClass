@@ -1,169 +1,138 @@
-# NextClass 智能课表
+# NextClass 智课表
 
 <div align="center">
+<img src="./src/assets/logo.svg" alt="NextClass Logo" width="240" />
 
-![React](https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-7.0-646CFF?style=flat-square&logo=vite&logoColor=white)
-![Ant Design](https://img.shields.io/badge/Ant%20Design-6.0-0170FE?style=flat-square&logo=antdesign&logoColor=white)
-![Zustand](https://img.shields.io/badge/Zustand-5.0-443E38?style=flat-square&logo=redux&logoColor=white)
+<h3>NextClass 智课表</h3>
+<p>基于 AI 图像识别和订阅推送的现代化智能课表管理系统</p>
 
-**基于 React 19 + TypeScript + Vite 7 的现代化智能课表管理系统**
-
-[快速开始](#-快速开始) • [功能特性](#-功能特性) • [技术栈](#-技术栈) • [项目结构](#-项目结构)
+[![License](<https://img.shields.io/badge/license-MIT%20(Non--Commercial)-red.svg>)](./LICENSE) [![React](https://img.shields.io/badge/React-%2320232a.svg?style=flat-square&logo=react&logoColor=%2361DAFB)](https://react.dev/) [![Sass](https://img.shields.io/badge/Sass-CC6699?style=flat-square&logo=sass&logoColor=white)](https://sass-lang.com/) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![pnpm](https://img.shields.io/badge/pnpm-%234a4a4a.svg?style=flat-square&logo=pnpm&logoColor=f69220)](https://pnpm.io/) [![Ant Design](https://img.shields.io/badge/Ant%20Design-0170FE?style=flat-square&logo=ant-design&logoColor=white)](https://ant.design/) [![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=flat-square&logo=framer&logoColor=white)](https://www.framer.com/motion/) [![Zustand](https://img.shields.io/badge/Zustand-bear?style=flat-square&color=orange)](https://github.com/pmndrs/zustand) [![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white)](https://vercel.com/)
 
 </div>
 
 ---
 
-## 📖 项目简介
+## 📖 项目介绍 (Introduction)
 
-**NextClass 智能课表** 是一个高效、现代化的课表管理解决方案。项目采用最新的前端技术栈构建，旨在提供流畅的用户体验和强大的功能支持。通过集成 Ant Design 6 和 Framer Motion，实现了美观且富有交互性的界面。
+**NextClass 智课表** 是一款专为高校学生设计的现代化课表管理应用。它摒弃了繁琐的手动输入，通过集成的 **AI 图像识别技术**，允许用户直接上传教务系统课表截图，即可自动解析并生成可视化的交互式课表。
 
-## 🚀 技术栈
+项目采用最新的 **React 19** 生态系统构建，结合 **Ant Design 5** 打造极简、美观的用户界面，并内置 **AI 助教** 功能，随时回答关于课程安排的自然语言提问。
 
-本项目采用前沿的前端技术组合，确保高性能与可维护性：
+## ✨ 核心功能 (Features)
 
-| 类别          | 技术                                            | 版本   | 说明                        |
-| ------------- | ----------------------------------------------- | ------ | --------------------------- |
-| **核心框架**  | [React](https://react.dev/)                     | ^19.2  | 最新一代前端框架            |
-| **开发语言**  | [TypeScript](https://www.typescriptlang.org/)   | ^5.9   | 强类型 JavaScript 超集      |
-| **构建工具**  | [Vite](https://vitejs.dev/)                     | ^7.2   | 极速开发与构建工具          |
-| **UI 组件库** | [Ant Design](https://ant.design/)               | ^6.0   | 企业级 UI 设计语言          |
-| **状态管理**  | [Zustand](https://zustand-demo.pmnd.rs/)        | ^5.0   | 轻量级状态管理库            |
-| **路由管理**  | [React Router](https://reactrouter.com/)        | ^7.9   | 声明式路由库                |
-| **HTTP 请求** | [Axios](https://axios-http.com/)                | ^1.13  | 基于 Promise 的 HTTP 客户端 |
-| **样式处理**  | [Sass](https://sass-lang.com/)                  | ^1.94  | CSS 预处理器                |
-| **动画效果**  | [Framer Motion](https://www.framer.com/motion/) | ^12.23 | 强大的 React 动画库         |
+### 📅 智能课表 (Smart Schedule)
 
-## 🎯 功能特性
+- **可视化周视图**：清晰展示每周课程安排，支持 1-20 周切换。
+- **图片一键导入**：上传课表截图，后台 AI 自动解析并录入课程信息。
+- **多时段支持**：完美支持每日 11 节课程 + 午休/晚饭时段的布局。
+- **课程详情**：点击课程卡片即可查看教室、教师、周次等详细信息。
 
-### ✅ 已实现功能
+### 🤖 AI 助理 (AI Assistant)
 
-- **🔐 认证系统**
+- **自然语言交互**：通过对话方式查询课程（例如：“下周二第一节是什么课？”）。
+- **状态检测**：实时检测课表导入状态，引导新用户完成配置。
 
-  - 完整的登录流程
-  - Token 持久化存储与自动登录
-  - HTTP 请求拦截器处理认证信息
+### 📊 仪表板 (Dashboard)
 
-- **📊 仪表板**
+- **实时状态**：首页展示当前正在进行或即将开始的课程，避免迟到。
+- **日程概览**：日历组件快速查看特定日期的课程列表。
+- **极简设计**：采用 Framer Motion 实现流畅的页面切换动画。
 
-  - 数据统计展示
-  - 用户信息管理
-  - 响应式布局设计
+### 🔐 用户系统 (User System)
 
-- **🛠 工程化配置**
-  - TypeScript 严格类型检查
-  - ESLint 代码规范检查 (v9)
-  - 生产环境构建优化
-  - 模块化 API 管理
+- **安全登录**：基于 Token 的身份认证机制。
+- **个人设置**：自定义用户偏好与系统配置。
 
-### 🚧 规划中功能
+## 🛠️ 技术栈 (Tech Stack)
 
-- [ ] 智能排课算法
-- [ ] 课程冲突检测
-- [ ] 多维度课表视图 (日/周/月)
-- [ ] 导出/打印功能
-- [ ] 主题切换与个性化设置
+- **核心框架**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **构建工具**: [Vite 5](https://vitejs.dev/)
+- **UI 组件库**: [Ant Design 5](https://ant.design/) + [Sass](https://sass-lang.com/)
+- **状态管理**: [Zustand](https://github.com/pmndrs/zustand) (轻量级状态管理)
+- **网络请求**: [Axios](https://axios-http.com/) (封装拦截器与类型响应)
+- **动画效果**: [Framer Motion](https://www.framer.com/motion/)
+- **日期处理**: [Day.js](https://day.js.org/)
 
-## 🚦 快速开始
+## 🚀 快速开始 (Getting Started)
 
-### 1. 环境准备
-
-确保您的开发环境满足以下要求：
+### 环境要求 (Prerequisites)
 
 - **Node.js**: >= 18.0.0
-- **pnpm**: 推荐使用 pnpm 管理依赖
+- **pnpm**: >= 8.0.0 (推荐) 或 npm/yarn
 
-### 2. 安装依赖
+### 安装步骤 (Installation)
 
-```bash
-# 克隆项目 (如果是从 git 获取)
-# git clone <repository-url>
+1. **克隆仓库**
 
-# 进入项目目录
-cd nextclass
+   ```bash
+   git clone https://github.com/your-username/nextclass.git
+   cd nextclass
+   ```
 
-# 安装依赖
-pnpm install
-```
+2. **安装依赖**
 
-### 3. 启动开发服务器
+   ```bash
+   pnpm install
+   ```
 
-```bash
-pnpm dev
-```
+3. **配置环境变量**
+   复制 `.env.development` 并根据需要修改 API 地址：
 
-访问 [http://localhost:5173](http://localhost:5173) 查看应用 (端口视 Vite 配置而定)。
+   ```bash
+   # .env.development
+   VITE_API_BASE_URL=http://localhost:8080
+   ```
 
-### 4. 构建生产版本
+4. **启动开发服务器**
+   ```bash
+   pnpm dev
+   ```
+   访问 http://localhost:5173 即可看到项目运行。
+
+### 构建生产版本 (Build)
 
 ```bash
 pnpm build
 ```
 
-### 5. 代码检查
+## 📂 项目结构 (Project Structure)
 
-```bash
-# 类型检查
-pnpm typecheck
-
-# 代码规范检查
-pnpm lint
 ```
-
-## 📦 项目结构
-
-```text
 src/
-├── api/                    # API 接口管理
-│   ├── auth.ts             # 认证相关接口
-│   └── user.ts             # 用户相关接口
-├── components/             # 公共组件
-│   ├── Common/             # 通用基础组件
-│   └── Layout/             # 布局组件
-├── pages/                  # 页面组件
-│   ├── Dashboard/          # 仪表板页
-│   ├── Home/               # 首页
-│   └── Login/              # 登录页
-├── router/                 # 路由配置
-├── stores/                 # Zustand 状态管理
-├── types/                  # TypeScript 类型定义
-├── utils/                  # 工具函数 (HTTP 等)
-└── App.tsx                 # 根组件
+├── api/            # API 接口定义 (AI, Auth, Schedule, User)
+├── assets/         # 静态资源 (Images, Icons)
+├── components/     # 公共组件
+├── pages/          # 页面组件
+│   ├── AIChat/     # AI 助教页面
+│   ├── Dashboard/  # 仪表板布局
+│   ├── DashboardHome/ # 仪表板首页
+│   ├── Home/       # 落地页
+│   ├── Login/      # 登录页
+│   ├── Schedule/   # 课表页
+│   └── Settings/   # 设置页
+├── router/         # 路由配置
+├── stores/         # Zustand 状态管理
+├── types/          # TypeScript 类型定义
+├── utils/          # 工具函数 (HTTP 封装等)
+├── App.tsx         # 根组件
+└── main.tsx        # 入口文件
 ```
 
-## 🔧 环境配置
+## 📜 许可证 (License)
 
-项目支持多环境配置，请在根目录创建 `.env` 文件：
+本项目采用 **修改版 MIT 协议**。
 
-**开发环境 (.env.development)**
+✅ **允许**：个人学习、教育用途、非营利性使用。
+❌ **禁止**：未经授权的商业用途（包括但不限于付费出售、作为商业项目的一部分）。
 
-```properties
-VITE_API_BASE_URL=http://localhost:3001/api
-VITE_APP_TITLE=NextClass 智能课表
-```
-
-**生产环境 (.env.production)**
-
-```properties
-VITE_API_BASE_URL=https://api.your-domain.com
-VITE_APP_TITLE=NextClass 智能课表
-```
-
-## 🎨 开发规范
-
-- **组件命名**: 采用 PascalCase，如 `UserProfile.tsx`
-- **状态管理**: 使用 Zustand Store，按业务模块拆分
-- **样式编写**: 优先使用 Ant Design 组件属性，自定义样式使用 SCSS 模块
-- **API 调用**: 统一封装在 `src/api` 目录，通过 `request` 工具函数调用
-
-## 📞 支持与反馈
-
-如果您在使用过程中遇到任何问题，或有任何建议，欢迎联系开发团队或提交 Issue。
+详情请参阅 [LICENSE](./LICENSE) 文件。
 
 ---
 
 <div align="center">
-  Copyright © 2025 NextClass Team. All rights reserved.
+
+**⭐ 如果这个项目对您有帮助，请给个 Star！**
+
+Made with ❤️ by NextClass Team（[fufu39](https://github.com/fufu39)）
+
 </div>
