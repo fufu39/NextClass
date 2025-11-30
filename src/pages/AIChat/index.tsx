@@ -178,7 +178,7 @@ const AIChat = () => {
           <div className={styles.inputWrapper}>
             <TextArea
               value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="输入你的问题，例如：今天下午有什么课？"
               autoSize={{ minRows: 1, maxRows: 4 }}

@@ -255,6 +255,7 @@ const Schedule = () => {
           name="termName"
           label="学期名称"
           rules={[{ required: true, message: '请输入学期名称' }]}
+          initialValue="2025-2026学年1学期"
         >
           <Input placeholder="例如：2025-2026学年1学期" />
         </Form.Item>
@@ -270,7 +271,7 @@ const Schedule = () => {
           <div style={{ marginBottom: 12 }}>
             <Checkbox
               checked={useDefaultImg}
-              onChange={(e) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setUseDefaultImg(e.target.checked);
                 if (e.target.checked) setFileList([]);
               }}
