@@ -1,0 +1,29 @@
+.auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background:
+    linear-gradient(120deg, rgba(0, 102, 255, 0.24), rgba(255, 0, 92, 0.24)),
+    #ffffff;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.title {
+  color: #101010;
+}
+
+.submit {
+  background: #ff005c;
+  color: #fff;
+  width: 100%;
+}
