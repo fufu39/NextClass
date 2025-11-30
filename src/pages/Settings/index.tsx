@@ -327,49 +327,51 @@ const Settings = () => {
   ]
 
   return (
-    <div className={styles.container}>
-      <div className={styles.settingsWrapper}>
-        <Tabs
-          tabPlacement="left"
-          items={items}
-          defaultActiveKey="notification"
-          style={{ height: '100%' }}
-        />
-      </div>
+    <div className={styles.pageWrapper}>
+      <div className={styles.container}>
+        <div className={styles.settingsWrapper}>
+          <Tabs
+            tabPlacement="left"
+            items={items}
+            defaultActiveKey="notification"
+            style={{ height: '100%' }}
+          />
+        </div>
 
-      <Modal
-        title="开启邮件提醒"
-        open={isModalOpen}
-        onOk={handleSubscribeSubmit}
-        onCancel={() => setIsModalOpen(false)}
-        confirmLoading={modalLoading}
-        destroyOnClose
-        style={{ marginTop: 150 }}
-      >
-        <Form form={subscribeForm} layout="vertical" preserve={false}>
-          <Form.Item name="timezone" label="时区" initialValue="Asia/Shanghai" rules={[{ required: true, message: '请选择时区' }]}>
-            <Select
-              showSearch
-              placeholder="请选择时区"
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                (String(option?.label ?? '')).toLowerCase().includes(input.toLowerCase())
-              }
-              options={[
-                { label: '上海 (Asia/Shanghai)', value: 'Asia/Shanghai' },
-                { label: '伦敦 (Europe/London)', value: 'Europe/London' },
-                { label: '纽约 (America/New_York)', value: 'America/New_York' },
-                { label: '东京 (Asia/Tokyo)', value: 'Asia/Tokyo' },
-                { label: '悉尼 (Australia/Sydney)', value: 'Australia/Sydney' },
-                { label: 'UTC', value: 'UTC' },
-              ]}
-            />
-          </Form.Item>
-          <Form.Item name="dailyTime" label="提醒时间" initialValue={dayjs('08:00', 'HH:mm')} rules={[{ required: true, message: '请选择提醒时间' }]}>
-            <TimePicker format="HH:mm" style={{ width: '100%' }} />
-          </Form.Item>
-        </Form>
-      </Modal>
+        <Modal
+          title="开启邮件提醒"
+          open={isModalOpen}
+          onOk={handleSubscribeSubmit}
+          onCancel={() => setIsModalOpen(false)}
+          confirmLoading={modalLoading}
+          destroyOnClose
+          style={{ marginTop: 150 }}
+        >
+          <Form form={subscribeForm} layout="vertical" preserve={false}>
+            <Form.Item name="timezone" label="时区" initialValue="Asia/Shanghai" rules={[{ required: true, message: '请选择时区' }]}>
+              <Select
+                showSearch
+                placeholder="请选择时区"
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (String(option?.label ?? '')).toLowerCase().includes(input.toLowerCase())
+                }
+                options={[
+                  { label: '上海 (Asia/Shanghai)', value: 'Asia/Shanghai' },
+                  { label: '伦敦 (Europe/London)', value: 'Europe/London' },
+                  { label: '纽约 (America/New_York)', value: 'America/New_York' },
+                  { label: '东京 (Asia/Tokyo)', value: 'Asia/Tokyo' },
+                  { label: '悉尼 (Australia/Sydney)', value: 'Australia/Sydney' },
+                  { label: 'UTC', value: 'UTC' },
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name="dailyTime" label="提醒时间" initialValue={dayjs('08:00', 'HH:mm')} rules={[{ required: true, message: '请选择提醒时间' }]}>
+              <TimePicker format="HH:mm" style={{ width: '100%' }} />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
     </div>
   )
 }

@@ -107,7 +107,7 @@ const AIChat = () => {
     return (
       <div className={styles.container}>
         <div className={styles.notImported}>
-          <RobotOutlined style={{ fontSize: 64, color: '#3b82f6', marginBottom: 24 }} />
+          <RobotOutlined style={{ fontSize: 64, color: '#333', opacity: 0.6, marginBottom: 24 }} />
           <h2>NextClass 智能学习助手</h2>
           <div className={styles.description}>
             <p>面向电子科技大学的智能课表与学习助手。</p>
@@ -189,7 +189,7 @@ const AIChat = () => {
             icon={<SendOutlined />}
             onClick={handleSend}
             disabled={!inputValue.trim() || loading}
-            style={{ height: 'auto', padding: '10px 20px' }}
+            style={{ height: 'auto', padding: '10px 20px', margin: '2.5px 0' }}
           >
             发送
           </Button>

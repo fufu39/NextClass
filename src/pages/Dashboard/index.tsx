@@ -1,3 +1,4 @@
+// 主界面骨架
 import { useEffect } from 'react'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import {
@@ -95,7 +96,7 @@ const DashboardLayout = () => {
             />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontWeight: 500 }}>{user.username}</span>
+            <span style={{ fontWeight: 500, fontSize: 15 }}>{user.username}</span>
             <div
               style={{ cursor: 'pointer' }}
               onClick={() => navigate('/dashboard/settings')}

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
 import { Button, Select, Spin, Card, Typography, App, Modal, Form, Input, DatePicker, Upload, Checkbox } from 'antd';
 import { UploadOutlined, CalendarOutlined, LeftOutlined, RightOutlined, InboxOutlined } from '@ant-design/icons';
+import { motion } from 'framer-motion';
 import type { CourseVO } from '../../api/schedule';
 import { getScheduleImportStatus, getScheduleByWeek, uploadScheduleImage } from '../../api/schedule';
 import styles from './index.module.scss';
@@ -50,6 +51,9 @@ const Schedule = () => {
   const [scheduleData, setScheduleData] = useState<CourseVO[]>([]);
   const [scheduleLoading, setScheduleLoading] = useState(false);
 
+  // Ref to track last fetched week to avoid double fetching
+  const lastFetchedWeek = React.useRef<number | undefined>(undefined);
+
   // Import Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -57,63 +61,71 @@ const Schedule = () => {
   const [useDefaultImg, setUseDefaultImg] = useState(false);
   const [fileList, setFileList] = useState<any[]>([]);
 
-  useEffect(() => {
-    checkImportStatus();
-  }, []);
-
-  useEffect(() => {
-    if (isImported) {
-      // If week is undefined, fetch without week param (or default to current week logic)
-      // The requirement is: "默认week是不传递的直接得到当前这周的课表"
-      // But our API function takes a number. We might need to adjust API or call logic.
-      // If we pass 0 or handle undefined in fetchSchedule?
-      // Let's see fetchSchedule implementation below.
-      fetchSchedule(week);
+  const fetchSchedule = useCallback(async (w?: number) => {
+    // If we are asking for a specific week that we just fetched, skip
+    if (w !== undefined && w === lastFetchedWeek.current) {
+      return;
     }
-  }, [isImported, week]);
 
-  const checkImportStatus = async () => {
+    setScheduleLoading(true);
+    try {
+      const res = await getScheduleByWeek(w);
+
+      if (res.code === 200) {
+        const data = res.data || [];
+        setScheduleData(data);
+
+        let currentWeek = w;
+        // If we didn't have a week set (first load), try to set it from the response
+        if (w === undefined && data.length > 0) {
+          currentWeek = data[0].week;
+          if (currentWeek) {
+            setWeek(currentWeek);
+          }
+        }
+        // Update last fetched week
+        lastFetchedWeek.current = currentWeek;
+      }
+    } catch (error: any) {
+      console.error('Failed to fetch schedule', error);
+      message.error(error.message || '获取课表失败');
+    } finally {
+      setScheduleLoading(false);
+    }
+  }, [message]);
+
+  const checkImportStatus = useCallback(async () => {
     setImportChecking(true);
     try {
       const res = await getScheduleImportStatus();
-      console.log(res)
       if (res.code === 200) {
-        setIsImported(res.data);
+        const imported = res.data;
+        setIsImported(imported);
+
+        if (imported) {
+          // Pre-fetch schedule before removing loading state
+          await fetchSchedule(undefined);
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to check import status', error);
       message.error(error.message || '无法获取课表状态');
     } finally {
       setImportChecking(false);
       setLoading(false);
     }
-  };
+  }, [message, fetchSchedule]);
 
-  const fetchSchedule = async (w?: number) => {
-    setScheduleLoading(true);
-    try {
-      const res = await getScheduleByWeek(w);
-      console.log(res)
+  useEffect(() => {
+    checkImportStatus();
+  }, [checkImportStatus]);
 
-      if (res.code === 200) {
-        const data = res.data || [];
-        setScheduleData(data);
-
-        // If we didn't have a week set (first load), try to set it from the response
-        if (w === undefined && data.length > 0) {
-          const currentWeek = data[0].week;
-          if (currentWeek) {
-            setWeek(currentWeek);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Failed to fetch schedule', error);
-      message.error(error.message || '获取课表失败');
-    } finally {
-      setScheduleLoading(false);
+  useEffect(() => {
+    if (isImported && week !== undefined) {
+      fetchSchedule(week);
     }
-  };
+  }, [isImported, week, fetchSchedule]);
+
 
   const handleImport = () => {
     setIsModalOpen(true);
@@ -137,7 +149,6 @@ const Schedule = () => {
         // Fetch default image
         try {
           const response = await fetch(defaultClassImg);
-          console.log(response)
           const blob = await response.blob();
           fileToUpload = new File([blob], 'class.png', { type: 'image/png' });
         } catch (e) {
@@ -165,7 +176,6 @@ const Schedule = () => {
         startDate: values.startDate.format('YYYY-MM-DD'),
         file: fileToUpload
       });
-      console.log(res)
 
       if (res.code === 200) {
         message.success('导入成功');
@@ -386,10 +396,15 @@ const Schedule = () => {
       <div className={styles.scheduleCard}>
         {scheduleLoading ? (
           <div className={styles.loadingContainer}>
-            <Spin size="large" />
+            <Spin size="large" tip="正在加载课表..." />
           </div>
         ) : (
-          <>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+          >
             {/* Header Row */}
             <div className={styles.gridHeader}>
               <div className={styles.timeHeader}>时间</div>
@@ -478,7 +493,7 @@ const Schedule = () => {
                 </div>
               </div>
             </div>
-          </>
+          </motion.div>
         )}
       </div>
       {modalElement}
