@@ -2,10 +2,7 @@ import axios from 'axios'
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  timeout: 1000000
 })
 
 // 请求拦截器
@@ -35,10 +32,10 @@ http.interceptors.response.use(
       localStorage.removeItem('token')
       window.location.href = '/login'
     }
-    
+
     const message = error.response?.data?.message || error.message || '请求失败'
     console.error('HTTP Error:', message)
-    
+
     return Promise.reject({
       message,
       status: error.response?.status,

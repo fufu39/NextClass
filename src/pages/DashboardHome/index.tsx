@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Row, Col, Card, Typography, Tag, List, Avatar, Progress, Calendar, App } from 'antd'
+import { Row, Col, Card, Typography, Tag, Avatar, Progress, Calendar, App } from 'antd'
 import type { Dayjs } from 'dayjs'
 import {
     ClockCircleOutlined,
@@ -21,13 +21,17 @@ dayjs.locale('zh-cn')
 const { Title, Text } = Typography
 
 const SECTION_TIMES: Record<number, { start: string; end: string }> = {
-    1: { start: '08:00', end: '09:35' },
-    2: { start: '09:35', end: '10:20' }, // Break? Or just contiguous? Assuming standard blocks
-    3: { start: '10:00', end: '11:35' },
-    5: { start: '14:00', end: '15:35' },
-    7: { start: '16:00', end: '17:35' },
-    9: { start: '19:00', end: '20:35' },
-    11: { start: '20:50', end: '22:25' }
+    1: { start: '08:30', end: '09:15' },
+    2: { start: '09:20', end: '10:05' },
+    3: { start: '10:20', end: '11:05' },
+    4: { start: '11:10', end: '11:55' },
+    5: { start: '14:30', end: '15:15' },
+    6: { start: '15:20', end: '16:05' },
+    7: { start: '16:20', end: '17:05' },
+    8: { start: '17:10', end: '17:55' },
+    9: { start: '19:30', end: '20:15' },
+    10: { start: '20:20', end: '21:05' },
+    11: { start: '21:10', end: '21:55' }
 }
 
 // Helper to get time in minutes for comparison

@@ -25,3 +25,34 @@ export const getScheduleByDate = async (date: string): Promise<RestBean<CourseVO
   })
   return res as unknown as RestBean<CourseVO[]>
 }
+
+// 查询课表导入状态
+export const getScheduleImportStatus = async (): Promise<RestBean<boolean>> => {
+  const res = await http.get<RestBean<boolean>>('/schedule/import/status')
+  return res as unknown as RestBean<boolean>
+}
+
+// 按周次查询整周课表
+export const getScheduleByWeek = async (week?: number): Promise<RestBean<CourseVO[]>> => {
+  const res = await http.get<RestBean<CourseVO[]>>('/schedule/week', {
+    params: { week }
+  })
+  return res as unknown as RestBean<CourseVO[]>
+}
+
+// 上传课表图片
+export interface UploadScheduleParams {
+  termName: string
+  startDate: string
+  file: File
+}
+
+export const uploadScheduleImage = async (params: UploadScheduleParams): Promise<RestBean<any>> => {
+  const formData = new FormData()
+  formData.append('termName', params.termName)
+  formData.append('startDate', params.startDate)
+  formData.append('file', params.file)
+
+  const res = await http.post<RestBean<any>>('/schedule/upload-image', formData)
+  return res as unknown as RestBean<any>
+}
