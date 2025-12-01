@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Row, Col, Card, Typography, Tag, Avatar, Progress, Calendar, App } from 'antd'
 import type { Dayjs } from 'dayjs'
 import {
     ClockCircleOutlined,
     EnvironmentOutlined,
     BookOutlined,
-    RightOutlined,
     FireOutlined,
     InboxOutlined
 } from '@ant-design/icons'
@@ -47,30 +46,29 @@ const DashboardHome = () => {
     const [selectedDate, setSelectedDate] = useState(dayjs())
     const [scheduleList, setScheduleList] = useState<CourseVO[]>([])
 
-    const fetchSchedule = useCallback(async (date: Dayjs) => {
-        try {
-            const res = await getScheduleByDate(date.format('YYYY-MM-DD'))
-            console.log(res);
-            if (res.code === 200) {
-                const sorted = (res.data || []).sort((a, b) => a.sectionStart - b.sectionStart)
-                setScheduleList(sorted)
-            } else {
-                message.error(res.message || '获取课表失败')
-            }
-        } catch (error) {
-            console.error('Fetch schedule error:', error)
-            message.error('获取课表失败')
-        }
-    }, [message])
-
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(dayjs()), 1000)
         return () => clearInterval(timer)
     }, [])
 
     useEffect(() => {
-        fetchSchedule(selectedDate)
-    }, [selectedDate, fetchSchedule])
+        const fetchSchedule = async () => {
+            try {
+                const res = await getScheduleByDate(selectedDate.format('YYYY-MM-DD'))
+                console.log(res)
+                if (res.code === 200) {
+                    const sorted = (res.data || []).sort((a, b) => a.sectionStart - b.sectionStart)
+                    setScheduleList(sorted)
+                } else {
+                    message.error(res.message || '获取课表失败')
+                }
+            } catch (error) {
+                console.error('Fetch schedule error:', error)
+                message.error('获取课表失败')
+            }
+        }
+        fetchSchedule()
+    }, [selectedDate, message])
 
     const onDateSelect = (date: Dayjs) => {
         setSelectedDate(date)
@@ -232,8 +230,8 @@ const DashboardHome = () => {
                                         </div>
                                     </>
                                 ) : (
-                                    <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                                        <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.5 }}>
+                                    <div style={{ textAlign: 'center', padding: '0 0 20px' }}>
+                                        <div style={{ fontSize: 48, marginBottom: 10, opacity: 0.5 }}>
                                             <InboxOutlined />
                                         </div>
                                         <Title level={3} style={{ color: 'white', margin: 0 }}>今天暂无课程</Title>
@@ -247,8 +245,8 @@ const DashboardHome = () => {
                     {/* Today's Schedule List */}
                     <motion.div variants={itemVariants}>
                         <div className={styles.sectionHeader}>
-                            <Title level={4}>{selectedDate.isSame(dayjs(), 'day') ? '今日课程' : '课程列表'}</Title>
-                            <Text className={styles.viewAll}>查看全部 <RightOutlined /></Text>
+                            <Title level={4}>今日课程📚</Title>
+                            {/* <Text className={styles.viewAll}>点击切换日期<RightOutlined /></Text> */}
                         </div>
                         <Card variant="borderless" className={styles.scheduleListCard}>
                             {scheduleList.length > 0 ? (
@@ -316,18 +314,18 @@ const DashboardHome = () => {
                                     <FireOutlined />
                                 </div>
                                 <div>
-                                    <div style={{ fontWeight: 600, fontSize: 16 }}>本周学习时长</div>
+                                    <div style={{ fontWeight: 600, fontSize: 16 }}>本周课程时长</div>
                                     <div style={{ fontSize: 12, color: '#9ca3af' }}>Keep it up!</div>
                                 </div>
                             </div>
                             <div className={styles.statsContent}>
-                                <Text style={{ fontSize: 36, fontWeight: 700 }}>0.00</Text>
+                                <Text style={{ fontSize: 36, fontWeight: 700 }}>12.00</Text>
                                 <Text type="secondary"> 小时</Text>
                             </div>
-                            <Progress percent={0} strokeColor="#101010" showInfo={false} size="small" />
+                            <Progress percent={60} strokeColor="#101010" showInfo={false} size="small" />
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-                                <Text type="secondary" style={{ fontSize: 12 }}>目标: 32h</Text>
-                                <Text type="secondary" style={{ fontSize: 12 }}>0%</Text>
+                                <Text type="secondary" style={{ fontSize: 12 }}>总时长: 20h</Text>
+                                <Text type="secondary" style={{ fontSize: 12 }}>60%</Text>
                             </div>
                         </Card>
                     </motion.div>
@@ -335,6 +333,7 @@ const DashboardHome = () => {
                     {/* Mini Calendar */}
                     <motion.div variants={itemVariants}>
                         <Card variant="borderless" className={styles.calendarCard}>
+                            <div style={{ fontWeight: 700, fontSize: 20 }}>日历📅</div>
                             <Calendar
                                 fullscreen={false}
                                 value={selectedDate}

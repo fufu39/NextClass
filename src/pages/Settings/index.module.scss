@@ -155,7 +155,7 @@
 }
 
 .sectionTitle {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   border-bottom: 1px solid #f0f0f0;
   padding-bottom: 16px;
 
@@ -177,7 +177,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  padding: 24px;
+  padding: 16px 24px;
   background: #fafafa;
   border-radius: 12px;
 
@@ -203,11 +203,15 @@
       color: #262626;
     }
 
-    .uploadBtn {
-      padding: 0;
-      height: auto;
-      font-size: 13px;
-    }
+    // .uploadBtn {
+    //   padding: 0;
+    //   height: auto;
+    //   font-size: 13px;
+
+    //   &:hover{
+    //     color: #1890ff;
+    //   }
+    // }
   }
 }
 

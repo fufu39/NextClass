@@ -87,8 +87,8 @@
 
 .timeText {
   color: rgba(255, 255, 255, 0.6);
-  font-size: 32px;
-  font-weight: 300;
+  font-size: 34px;
+  font-weight: 700;
   font-family: monospace;
 }
 
@@ -96,6 +96,9 @@
   color: white !important;
   margin: 0 0 8px 0 !important;
   font-size: 32px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cardFooter {
@@ -115,21 +118,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 6px;
+  margin-top: calc(32px + 6px);
+  overflow: hidden;
+  position: relative;
 
   h4 {
     margin: 0;
   }
 
-  .viewAll {
-    cursor: pointer;
-    color: #6b7280;
-    transition: color 0.3s;
+  // .viewAll {
+  //   position: absolute;
+  //   top: 8px;
+  //   right: 0px;
+  //   cursor: pointer;
+  //   color: #6b707b;
+  //   transition: color 0.3s;
 
-    &:hover {
-      color: #101010;
-    }
-  }
+  //   &:hover {
+  //     color: #101010;
+  //   }
+  // }
 }
 
 .scheduleListCard {
@@ -216,26 +225,35 @@
   :global {
     .ant-card-body {
       height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-top: 14px;
     }
 
     .ant-picker-calendar-header {
-      padding: 12px 0;
+      padding: 20px 0 16px;
+    }
+
+    .ant-picker-calendar-mode-switch {
+      display: none;
     }
 
     .ant-picker-calendar {
-      height: 100%;
+      flex: 1;
+      min-height: 0;
     }
   }
 }
 
 .emptyState {
   text-align: center;
-  padding: 40px 0;
-  color: #9ca3af;
+  padding: 80px 0 40px;
+  color: #737373;
+  font-size: 14px;
 
   .icon {
     font-size: 48px;
     margin-bottom: 16px;
-    color: #e5e7eb;
+    color: #8f8f8f;
   }
 }

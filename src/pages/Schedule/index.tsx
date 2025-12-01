@@ -88,9 +88,9 @@ const Schedule = () => {
         // Update last fetched week
         lastFetchedWeek.current = currentWeek;
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Failed to fetch schedule', error);
-      message.error(error.message || '获取课表失败');
+      message.error((error as Error).message || '获取课表失败');
     } finally {
       setScheduleLoading(false);
     }
@@ -109,9 +109,9 @@ const Schedule = () => {
           await fetchSchedule(undefined);
         }
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Failed to check import status', error);
-      message.error(error.message || '无法获取课表状态');
+      message.error((error as Error).message || '无法获取课表状态');
     } finally {
       setImportChecking(false);
       setLoading(false);
@@ -154,7 +154,7 @@ const Schedule = () => {
           const response = await fetch(defaultClassImg);
           const blob = await response.blob();
           fileToUpload = new File([blob], 'class.png', { type: 'image/png' });
-        } catch (e) {
+        } catch {
           message.error('无法加载默认图片');
           setImporting(false);
           return;
@@ -456,7 +456,7 @@ const Schedule = () => {
           </div>
         </div>
 
-        <Button icon={<UploadOutlined />} onClick={handleImport}>
+        <Button icon={<UploadOutlined />} onClick={handleImport} size="middle" type="primary">
           重新导入
         </Button>
       </div>
@@ -559,7 +559,7 @@ const Schedule = () => {
                         key={`${course.courseCode}-${idx}`}
                         content={popoverContent}
                         trigger="click"
-                        placement="rightTop"
+                        placement="top"
                         overlayStyle={{ zIndex: 100 }}
                       >
                         <div

@@ -31,12 +31,12 @@ export const getSubscriptionPreferences = async (): Promise<SubscriptionPreferen
   return response.data
 }
 
-export const subscribe = async (data: SubscribeParams): Promise<any> => {
+export const subscribe = async (data: SubscribeParams): Promise<unknown> => {
   const res = await http.post('/subscription/subscribe', data)
   return res
 }
 
-export const unsubscribe = async (): Promise<any> => {
+export const unsubscribe = async (): Promise<unknown> => {
   const res = await http.post('/subscription/unsubscribe')
   return res
 }

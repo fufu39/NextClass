@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Form, Input, Button, message, Switch, Tabs, Tag, Modal, Select, TimePicker } from 'antd'
-import { UserOutlined, LockOutlined, BellOutlined, SafetyOutlined, SettingOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import { getUserProfile, updateUserProfile, changePassword } from '../../api/user'
+import { UserOutlined, LockOutlined, BellOutlined, SafetyOutlined, SettingOutlined } from '@ant-design/icons'
+import { getUserProfile, updateUserProfile } from '../../api/user'
 import { getSubscriptionPreferences, subscribe, unsubscribe } from '../../api/subscription'
 import { useUserStore } from '../../stores/user'
 import dayjs from 'dayjs'
@@ -21,11 +21,9 @@ const Settings = () => {
   useEffect(() => {
     if (storeUser) {
       form.setFieldsValue({
-        username: storeUser.username,
-        email: storeUser.email || '无法修改邮箱' // Fallback if email is missing in store
+        username: storeUser.username || '无法修改用户名',
+        email: storeUser.email || '无法修改邮箱'
       })
-      // emailSubscription is now handled by separate API, but we can init from store if available
-      // However, fetchSubscription will override it, which is fine.
     }
   }, [storeUser, form])
 
@@ -94,7 +92,7 @@ const Settings = () => {
     }
   }
 
-  const handlePasswordChange = async (values: { oldPassword: string; newPassword: string }) => {
+  const handlePasswordChange = async () => {
     // 暂时禁用API调用
     // try {
     //   await changePassword({
@@ -199,57 +197,6 @@ const Settings = () => {
       ),
     },
     {
-      key: 'general',
-      label: <div className={styles.tabLabel}><UserOutlined /> <span>个人资料</span></div>,
-      children: (
-        <div className={styles.tabContent}>
-          <div className={styles.sectionTitle}>
-            <h2>个人资料</h2>
-            <p>管理您的个人信息和账户详情</p>
-          </div>
-
-          <div className={styles.avatarSection}>
-            <div className={styles.avatar}>
-              {storeUser?.avatar ? <img src={storeUser.avatar} alt="avatar" style={{ width: '100%', borderRadius: '50%' }} /> : <UserOutlined />}
-            </div>
-            <div className={styles.avatarInfo}>
-              <h3>{storeUser?.username || 'User'}</h3>
-              <Button type="link" className={styles.uploadBtn}>更换头像</Button>
-            </div>
-          </div>
-
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleUpdateProfile}
-            className={styles.formSection}
-          >
-            <Form.Item
-              label="用户名"
-              name="username"
-              rules={[{ required: true, message: '请输入用户名' }]}
-            >
-              <Input size="large" placeholder="您的用户名" />
-            </Form.Item>
-
-            <Form.Item
-              label="邮箱地址"
-              name="email"
-              help="如需更改邮箱，请联系管理员"
-            >
-              <Input size="large" disabled style={{ color: 'rgba(0,0,0,0.65)', cursor: 'default', backgroundColor: '#f5f5f5' }} />
-            </Form.Item>
-
-            <Form.Item style={{ marginTop: 40 }}>
-              <Button type="primary" htmlType="submit" loading={loading}>
-                保存更改
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
-      ),
-    },
-    {
       key: 'security',
       label: <div className={styles.tabLabel}><SafetyOutlined /> <span>账号安全</span></div>,
       children: (
@@ -310,12 +257,65 @@ const Settings = () => {
       ),
     },
     {
+      key: 'general',
+      label: <div className={styles.tabLabel}><UserOutlined /> <span>个人资料</span></div>,
+      children: (
+        <div className={styles.tabContent}>
+          <div className={styles.sectionTitle}>
+            <h2>个人资料（待开放）</h2>
+            <p>管理您的个人信息和账户详情</p>
+          </div>
+
+          <div className={styles.avatarSection}>
+            <div className={styles.avatar}>
+              {storeUser?.avatar ? <img src={storeUser.avatar} alt="avatar" style={{ width: '100%', borderRadius: '50%' }} /> : <UserOutlined />}
+            </div>
+            <div className={styles.avatarInfo}>
+              <h3>{storeUser?.username || 'User'}</h3>
+              {/* <Button type="link" className={styles.uploadBtn}>更换头像</Button> */}
+            </div>
+          </div>
+
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleUpdateProfile}
+            className={styles.formSection}
+          >
+            <Form.Item
+              label="用户名"
+              name="username"
+              rules={[{ required: true, message: '请输入用户名' }]}
+              help="如需更改用户名，请联系管理员"
+            >
+              <Input size="large" disabled placeholder="您的用户名" />
+            </Form.Item>
+
+            <Form.Item
+              label="邮箱地址"
+              name="email"
+              rules={[{ required: true, message: '请输入邮箱' }]}
+              help="如需更改邮箱，请联系管理员"
+            >
+              <Input size="large" disabled placeholder="您的邮箱" />
+            </Form.Item>
+
+            <Form.Item style={{ marginTop: 40 }}>
+              <Button type="primary" loading={loading}>
+                保存更改
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+      ),
+    },
+    {
       key: 'other',
       label: <div className={styles.tabLabel}><SettingOutlined /> <span>其他设置</span></div>,
       children: (
         <div className={styles.tabContent}>
           <div className={styles.sectionTitle}>
-            <h2>其他设置</h2>
+            <h2>其他设置（待开放）</h2>
             <p>更多个性化选项</p>
           </div>
           <div style={{ padding: '40px 0', textAlign: 'center', color: '#ccc' }}>
