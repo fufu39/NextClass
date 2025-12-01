@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
-import { Button, Select, Spin, Card, Typography, App, Modal, Form, Input, DatePicker, Upload, Checkbox } from 'antd';
-import { UploadOutlined, CalendarOutlined, LeftOutlined, RightOutlined, InboxOutlined } from '@ant-design/icons';
+import { Button, Select, Spin, Card, Typography, App, Modal, Form, Input, DatePicker, Upload, Checkbox, Image, Popover } from 'antd';
+import { UploadOutlined, CalendarOutlined, LeftOutlined, RightOutlined, InboxOutlined, EnvironmentOutlined, UserOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import type { CourseVO } from '../../api/schedule';
 import { getScheduleImportStatus, getScheduleByWeek, uploadScheduleImage } from '../../api/schedule';
@@ -60,6 +60,7 @@ const Schedule = () => {
   const [form] = Form.useForm();
   const [useDefaultImg, setUseDefaultImg] = useState(false);
   const [fileList, setFileList] = useState<any[]>([]);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const fetchSchedule = useCallback(async (w?: number) => {
     // If we are asking for a specific week that we just fetched, skip
@@ -70,6 +71,7 @@ const Schedule = () => {
     setScheduleLoading(true);
     try {
       const res = await getScheduleByWeek(w);
+      console.log(res);
 
       if (res.code === 200) {
         const data = res.data || [];
@@ -131,6 +133,7 @@ const Schedule = () => {
     setIsModalOpen(true);
     setUseDefaultImg(false);
     setFileList([]);
+    setPreviewImage(null);
     form.resetFields();
   };
 
@@ -213,6 +216,18 @@ const Schedule = () => {
     return (weightSum / TOTAL_WEIGHT) * 100;
   };
 
+  const getCourseTimeRange = (startSection: number, count: number) => {
+    const startItem = SCHEDULE_LAYOUT.find(item => item.type === 'section' && item.id === startSection);
+    const endItem = SCHEDULE_LAYOUT.find(item => item.type === 'section' && item.id === startSection + count - 1);
+
+    if (startItem && endItem) {
+      const startTime = startItem.time.split(' - ')[0];
+      const endTime = endItem.time.split(' - ')[1];
+      return `${startTime} - ${endTime}`;
+    }
+    return '';
+  };
+
   // Calculate height %
   const getHeightPercent = (sectionStart: number, sectionCount: number) => {
     let weightSum = 0;
@@ -258,7 +273,7 @@ const Schedule = () => {
       onCancel={handleModalCancel}
       onOk={handleUploadSubmit}
       confirmLoading={importing}
-      width={600}
+      width={560}
       destroyOnClose
     >
       <Form form={form} layout="vertical" preserve={false}>
@@ -268,7 +283,7 @@ const Schedule = () => {
           rules={[{ required: true, message: '请输入学期名称' }]}
           initialValue="2025-2026学年1学期"
         >
-          <Input placeholder="例如：2025-2026学年1学期" />
+          <Input placeholder="例如：2025-2026学年1学期" allowClear />
         </Form.Item>
         <Form.Item
           name="startDate"
@@ -285,33 +300,87 @@ const Schedule = () => {
               checked={useDefaultImg}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setUseDefaultImg(e.target.checked);
-                if (e.target.checked) setFileList([]);
+                if (e.target.checked) {
+                  setFileList([]);
+                  setPreviewImage(defaultClassImg);
+                } else {
+                  setPreviewImage(null);
+                }
               }}
             >
-              使用内置默认图片 (assets/class.png)
+              使用示例图片 (assets/class.png)
             </Checkbox>
           </div>
 
-          {!useDefaultImg && (
-            <Dragger
-              fileList={fileList}
-              beforeUpload={() => false}
-              onChange={({ fileList }) => setFileList(fileList.slice(-1))}
-              maxCount={1}
-              accept="image/*"
-            >
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">点击或拖拽上传文件</p>
-              <p className="ant-upload-hint">支持 PNG, JPG 等图片格式</p>
-            </Dragger>
-          )}
-          {useDefaultImg && (
-            <div style={{ padding: '12px', background: '#f5f5f5', borderRadius: '8px', textAlign: 'center', color: '#666' }}>
-              已选择内置演示课表图片
-            </div>
-          )}
+          <div style={{ height: 220 }}>
+            {useDefaultImg ? (
+              <div style={{
+                height: '100%',
+                border: '1px dashed #d9d9d9',
+                borderRadius: 8,
+                background: '#fafafa',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                // padding: 8
+              }}>
+                <Image
+                  src={previewImage || defaultClassImg}
+                  alt="示例图片"
+                  height={160}
+                  style={{ objectFit: 'contain', maxWidth: '100%' }}
+                />
+                <div style={{ marginTop: 5, color: '#999', fontSize: 14 }}>已选择内置演示课表图片</div>
+              </div>
+            ) : (
+              <Dragger
+                fileList={fileList}
+                beforeUpload={(file) => {
+                  const isLt2M = file.size / 1024 / 1024 < 2;
+                  if (!isLt2M) {
+                    message.error('图片大小不能超过 2MB!');
+                    return Upload.LIST_IGNORE;
+                  }
+                  const reader = new FileReader();
+                  reader.readAsDataURL(file);
+                  reader.onload = () => setPreviewImage(reader.result as string);
+                  return false;
+                }}
+                onChange={({ fileList }) => {
+                  setFileList(fileList.slice(-1));
+                  if (fileList.length === 0) setPreviewImage(null);
+                }}
+                maxCount={1}
+                accept="image/png,image/jpg,image/jpeg"
+                showUploadList={false}
+                height={220}
+              >
+                {previewImage ? (
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <Image
+                      src={previewImage}
+                      alt="预览"
+                      height={160}
+                      style={{ objectFit: 'contain', maxWidth: '100%' }}
+                    />
+                    <div style={{ marginTop: 5, color: '#999', fontSize: 14 }}>点击图片放大，点击空白处更换</div>
+                  </div>
+                ) : (
+                  <>
+                    <p className="ant-upload-drag-icon">
+                      <InboxOutlined />
+                    </p>
+                    <p className="ant-upload-text">点击或拖拽上传文件</p>
+                    <p className="ant-upload-hint">支持 PNG, JPG, JPEG 格式 (最大2MB)</p>
+                  </>
+                )}
+              </Dragger>
+            )}
+          </div>
         </Form.Item>
       </Form>
     </Modal>
@@ -396,7 +465,7 @@ const Schedule = () => {
       <div className={styles.scheduleCard}>
         {scheduleLoading ? (
           <div className={styles.loadingContainer}>
-            <Spin size="large" tip="正在加载课表..." />
+            <Spin size="large" />
           </div>
         ) : (
           <motion.div
@@ -461,33 +530,63 @@ const Schedule = () => {
                     const left = dayIndex * width;
 
                     const colorIdx = getColorIndex(course.courseName);
+                    const timeRange = getCourseTimeRange(course.sectionStart, course.sectionCount);
 
-                    return (
-                      <div
-                        key={`${course.courseCode}-${idx}`}
-                        style={{
-                          position: 'absolute',
-                          left: `${left}%`,
-                          top: `calc(${top}% + 1px)`,
-                          width: `${width}%`,
-                          height: `calc(${height}% - 2px)`,
-                          padding: 4,
-                          pointerEvents: 'auto'
-                        }}
-                      >
-                        <div
-                          className={styles.courseContent}
-                          style={{
-                            background: COURSE_COLORS[colorIdx],
-                            borderLeft: `4px solid ${COURSE_TEXT_COLORS[colorIdx]}`,
-                            color: COURSE_TEXT_COLORS[colorIdx],
-                          }}
-                        >
-                          <div className={styles.courseName}>{course.courseName}</div>
-                          <div className={styles.courseInfo}>{course.classroom}</div>
-                          <div className={styles.courseInfo}>{course.teacherName}</div>
+                    const popoverContent = (
+                      <div style={{ minWidth: 180, maxWidth: 240 }}>
+                        <div style={{ marginBottom: 8, fontWeight: 'bold', fontSize: 15, color: '#1f1f1f', lineHeight: 1.4 }}>
+                          {course.courseName}
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, color: '#666', fontSize: 13 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <EnvironmentOutlined style={{ color: '#1890ff' }} /> {course.classroom}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <UserOutlined style={{ color: '#52c41a' }} /> {course.teacherName}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <CalendarOutlined style={{ color: '#fa8c16' }} /> {week ? `第 ${week} 周` : ''} {DAYS[dayIndex]}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <ClockCircleOutlined style={{ color: '#722ed1' }} /> {timeRange}
+                          </div>
                         </div>
                       </div>
+                    );
+
+                    return (
+                      <Popover
+                        key={`${course.courseCode}-${idx}`}
+                        content={popoverContent}
+                        trigger="click"
+                        placement="rightTop"
+                        overlayStyle={{ zIndex: 100 }}
+                      >
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: `${left}%`,
+                            top: `calc(${top}% + 1px)`,
+                            width: `${width}%`,
+                            height: `calc(${height}% - 2px)`,
+                            padding: 4,
+                            pointerEvents: 'auto'
+                          }}
+                        >
+                          <div
+                            className={styles.courseContent}
+                            style={{
+                              background: COURSE_COLORS[colorIdx],
+                              borderLeft: `4px solid ${COURSE_TEXT_COLORS[colorIdx]}`,
+                              color: COURSE_TEXT_COLORS[colorIdx],
+                            }}
+                          >
+                            <div className={styles.courseName}>{course.courseName}</div>
+                            <div className={styles.courseInfo}>{course.classroom}</div>
+                            <div className={styles.courseInfo}>{course.teacherName}</div>
+                          </div>
+                        </div>
+                      </Popover>
                     );
                   })}
                 </div>
