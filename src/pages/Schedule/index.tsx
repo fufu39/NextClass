@@ -558,7 +558,7 @@ const Schedule = () => {
                 ))}
 
                 {/* Overlay Courses */}
-                <div style={{ position: 'absolute', top: 0, left: 100, right: 0, bottom: 0, pointerEvents: 'none' }}>
+                <div className={styles.courseOverlay}>
                   {scheduleData.map((course, idx) => {
                     const dayIndex = course.dayOfWeek - 1;
                     // course.sectionStart is 1-based section index

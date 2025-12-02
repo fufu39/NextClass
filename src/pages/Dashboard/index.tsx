@@ -1,5 +1,5 @@
 // 主界面骨架
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import {
   AppstoreOutlined,
@@ -7,9 +7,10 @@ import {
   SettingOutlined,
   UserOutlined,
   LogoutOutlined,
-  RobotOutlined
+  RobotOutlined,
+  MenuOutlined
 } from '@ant-design/icons'
-import { App, Avatar, Breadcrumb } from 'antd'
+import { App, Avatar, Breadcrumb, Button } from 'antd'
 import { useUserStore } from '../../stores/user'
 import { TipsButton } from '../../components/Tips'
 import styles from './index.module.scss'
@@ -20,6 +21,7 @@ const DashboardLayout = () => {
   const location = useLocation()
   const { user, logout } = useUserStore()
   const { message } = App.useApp()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     if (!user) {
@@ -50,12 +52,25 @@ const DashboardLayout = () => {
     return location.pathname.startsWith(item.key)
   }) || menuItems[0]
 
+  const handleMenuClick = (key: string) => {
+    navigate(key)
+    setMobileMenuOpen(false)
+  }
+
   if (!user) return null
 
   return (
     <div className={styles.dashboardContainer}>
+      {/* Mobile Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className={styles.overlay}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Floating Sidebar */}
-      <div className={styles.sidebar}>
+      <div className={`${styles.sidebar} ${mobileMenuOpen ? styles.mobileOpen : ''}`}>
         <div className={styles.logo}>
           <img src={logo} alt="NextClass" />
         </div>
@@ -65,7 +80,7 @@ const DashboardLayout = () => {
             <div
               key={item.key}
               className={`${styles.menuItem} ${activeMenu.key === item.key ? styles.active : ''}`}
-              onClick={() => navigate(item.key)}
+              onClick={() => handleMenuClick(item.key)}
             >
               <span className={styles.icon}>{item.icon}</span>
               <span>{item.label}</span>
@@ -90,12 +105,20 @@ const DashboardLayout = () => {
         <div className={styles.contentHeader}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <Breadcrumb
-                items={[
-                  { title: 'NextClass' },
-                  { title: activeMenu.label }
-                ]}
+              <Button
+                type="text"
+                icon={<MenuOutlined />}
+                className={styles.mobileMenuBtn}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               />
+              <div className={styles.breadcrumbWrapper}>
+                <Breadcrumb
+                  items={[
+                    { title: 'NextClass' },
+                    { title: activeMenu.label }
+                  ]}
+                />
+              </div>
               <TipsButton />
             </div>
           </div>

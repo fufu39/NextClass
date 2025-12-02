@@ -360,3 +360,67 @@
     background: transparent !important;
   }
 }
+
+@media (max-width: 768px) {
+  .loginBox {
+    width: 90%;
+    padding: 32px 24px;
+    max-width: none;
+  }
+
+  .blobRed {
+    width: 300px;
+    height: 300px;
+    top: -5%;
+    left: -10%;
+  }
+
+  .blobGreen {
+    width: 280px;
+    height: 280px;
+    bottom: 20%;
+    right: -15%;
+  }
+
+  .blobOrange {
+    width: 250px;
+    height: 250px;
+  }
+
+  .title {
+    font-size: 32px;
+    margin-bottom: 24px;
+  }
+
+  .homeBtn {
+    top: 16px;
+    left: 16px;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .switchIcon {
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .form {
+    :global {
+      .ant-form-item {
+        margin-bottom: 16px;
+      }
+    }
+  }
+
+  .actions {
+    margin-bottom: 24px;
+  }
+
+  .submitBtn {
+    height: 44px;
+    font-size: 15px;
+  }
+}

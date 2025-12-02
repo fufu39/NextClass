@@ -143,6 +143,15 @@
   }
 }
 
+.courseOverlay {
+  position: absolute;
+  top: 0;
+  left: 100px;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
 .courseCard {
   position: absolute;
   left: 0;
@@ -246,4 +255,138 @@
   color: #ccc;
   font-size: 12px;
   letter-spacing: 4px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+    height: auto;
+    min-height: 100vh;
+    display: block;
+  }
+
+  .header {
+    padding: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    .titleGroup {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .controls {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    // Hide the "suggest screenshot" text
+    > div:last-child {
+      width: 100%;
+      justify-content: space-between;
+      
+      span {
+        display: none;
+      }
+    }
+  }
+
+  .scheduleCard {
+    overflow: visible !important;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    height: auto;
+    flex: none;
+  }
+
+  .gridBody {
+    overflow: visible !important;
+    flex: none;
+    height: auto;
+  }
+  
+  .gridContent {
+    min-height: auto;
+  }
+
+  .gridHeader {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 50;
+    padding-bottom: 8px;
+    margin-bottom: 0;
+
+    .timeHeader {
+      width: 30px;
+      font-size: 10px;
+      padding: 0;
+    }
+    
+    .dayHeader {
+      font-size: 12px;
+      padding: 0 2px;
+    }
+  }
+
+  .timeRow {
+    min-height: 50px;
+    
+    .timeSlot {
+      width: 30px;
+      padding: 0;
+      
+      .sectionIndex {
+        font-size: 12px;
+      }
+      .timeRange {
+        display: none;
+      }
+    }
+  }
+
+  .courseOverlay {
+    left: 30px;
+  }
+
+  .courseContent {
+    padding: 4px 2px;
+    flex-direction: row;
+    gap: 2px;
+    align-items: flex-start;
+    
+    .courseName {
+      writing-mode: vertical-lr;
+      font-size: 12px;
+      line-height: 1.2;
+      margin-bottom: 0;
+      word-break: break-all;
+    }
+    
+    .courseInfo {
+      writing-mode: vertical-lr;
+      font-size: 10px;
+      line-height: 1.2;
+      opacity: 0.9;
+      word-break: break-all;
+
+      // Hide teacher name (3rd child)
+      &:nth-child(3) {
+        display: none;
+      }
+    }
+  }
+
+  .breakLabel {
+    writing-mode: vertical-lr;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+  
+  .scheduleCard:hover {
+    transform: none;
+  }
 }

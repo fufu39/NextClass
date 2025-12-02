@@ -111,8 +111,8 @@ const AIChat = () => {
           <RobotOutlined style={{ fontSize: 64, color: '#333', opacity: 0.6, marginBottom: 24 }} />
           <h2>NextClass 智能学习助手</h2>
           <div className={styles.description}>
-            <p>面向电子科技大学的智能课表与学习助手。</p>
-            <p>系统对电子科大教务系统的课表截图定制化解析：经 Qwen-VL 带理解的 OCR + 本地规则解析自动结构化入库，支持自然语言查询「明天/本周有什么课」，并通过邮件推送提醒课程与任务。</p>
+            <p>面向电子科技大学的智能课表与学习助手</p>
+            <p>系统对电子科大教务系统的课表截图定制化解析：经 Qwen-VL 带理解的 OCR + 本地规则解析自动结构化入库，支持自然语言查询「明天/本周有什么课」</p>
           </div>
           <Button
             type="primary"

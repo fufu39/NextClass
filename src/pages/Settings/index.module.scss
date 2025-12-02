@@ -319,3 +319,136 @@
     filter: invert(1) hue-rotate(180deg);
   }
 }
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 16px;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+
+  .settingsWrapper {
+    min-height: auto;
+
+    :global {
+      .ant-tabs-left {
+        flex-direction: column;
+        height: auto !important;
+
+        >.ant-tabs-nav {
+          width: 100%;
+          min-width: 100%;
+          height: auto;
+          min-height: 50px;
+          padding: 0;
+          border-right: none;
+          border-bottom: 1px solid #f0f0f0;
+          flex: 0 0 auto;
+
+          // 隐藏原生的竖向指示条
+          .ant-tabs-ink-bar {
+            display: none !important;
+          }
+
+          .ant-tabs-nav-wrap {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            overflow: visible;
+          }
+
+          .ant-tabs-nav-list {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            transform: none !important;
+          }
+
+          .ant-tabs-tab {
+            flex: 1;
+            margin: 0 !important;
+            padding: 12px 0 !important;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+
+            .ant-tabs-tab-btn {
+              width: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              color: #8c8c8c;
+            }
+
+            &.ant-tabs-tab-active {
+              border-right: none;
+              background: transparent;
+              border-bottom: 2px solid #1890ff;
+
+              &::before {
+                display: none;
+              }
+
+              // 移除之前的 box-shadow 方式，改用 border-bottom 更稳健
+              box-shadow: none;
+
+              .ant-tabs-tab-btn {
+                color: #1890ff;
+              }
+            }
+          }
+        }
+
+        >.ant-tabs-content-holder {
+          min-height: auto;
+          padding-bottom: 20px;
+        }
+      }
+    }
+  }
+
+  .tabLabel {
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+    display: flex;
+
+    span {
+      display: none;
+    }
+
+    :global(.anticon) {
+      font-size: 22px;
+      margin: 0;
+      display: block;
+      line-height: 1;
+    }
+  }
+
+  .tabContent {
+    padding: 20px 16px;
+    max-width: 100%;
+  }
+
+  .avatarSection {
+    flex-direction: column;
+    text-align: center;
+
+    .avatar {
+      margin-right: 0;
+      margin-bottom: 12px;
+    }
+  }
+
+  .notificationItem {
+    flex-direction: column;
+    gap: 16px;
+
+    .info {
+      max-width: 100%;
+    }
+  }
+}

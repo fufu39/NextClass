@@ -184,16 +184,18 @@ const DashboardHome = () => {
             {/* Header Section */}
             <motion.div variants={itemVariants} className={styles.header}>
                 <div>
-                    <Text className={styles.date}>
-                        {selectedDate.format('YYYY年MM月DD日 dddd')}
-                    </Text>
-                    <div className={styles.greeting}>
-                        <Title level={2} style={{ margin: 0, fontWeight: 600 }}>
-                            {getTimeGreeting()}，{user.username}
-                        </Title>
-                        <span className={styles.clock}>
-                            {currentTime.format('HH:mm:ss')}
-                        </span>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Text className={styles.date}>
+                            {selectedDate.format('YYYY年MM月DD日 dddd')}
+                        </Text>
+                        <div className={styles.greeting}>
+                            <Title level={2} style={{ margin: 0, fontWeight: 600 }}>
+                                {getTimeGreeting()}，{user.username}
+                            </Title>
+                            <span className={styles.clock}>
+                                {currentTime.format('HH:mm:ss')}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </motion.div>

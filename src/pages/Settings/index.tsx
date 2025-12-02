@@ -4,6 +4,7 @@ import { UserOutlined, LockOutlined, BellOutlined, SafetyOutlined, SettingOutlin
 import { getUserProfile, updateUserProfile } from '../../api/user'
 import { askCode, resetPassword } from '../../api/auth'
 import { getSubscriptionPreferences, subscribe, unsubscribe } from '../../api/subscription'
+import { getScheduleImportStatus } from '../../api/schedule'
 import { useUserStore } from '../../stores/user'
 import { useCommonStore } from '../../stores/common'
 import dayjs from 'dayjs'
@@ -161,6 +162,18 @@ const Settings = () => {
 
   const handleSubscriptionChange = async (checked: boolean) => {
     if (checked) {
+      try {
+        const res = await getScheduleImportStatus()
+        if (!res.data) {
+          message.warning('当前还未导入课表，无法开启邮件提醒')
+          return
+        }
+      } catch (error) {
+        console.error('Check schedule status failed', error)
+        message.error('系统繁忙，请稍后再试')
+        return
+      }
+
       setIsModalOpen(true)
       // Set default values if form is empty
       if (!subscribeForm.getFieldValue('timezone')) {

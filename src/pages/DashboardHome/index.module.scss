@@ -257,3 +257,84 @@
     color: #8f8f8f;
   }
 }
+
+@media (max-width: 768px) {
+  .container {
+    margin: 0;
+  }
+
+  .header {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    .greeting {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .clock {
+      margin-left: 0;
+      font-size: 24px;
+      line-height: 1.2;
+      display: block;
+    }
+    
+    .date {
+      font-size: 14px;
+      color: #666;
+      order: -1;
+    }
+  }
+
+  // Hide weekly duration card on mobile
+  .statsCard {
+    display: none;
+  }
+
+  // Adjust Next Class card height
+  .nextClassCard {
+    height: auto;
+    min-height: 180px;
+  }
+
+  .courseTitle {
+    font-size: 24px !important;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .timeText {
+    font-size: 24px;
+  }
+  
+  // Stack footer items vertically
+  .cardFooter {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .scheduleListCard {
+    height: auto;
+    max-height: 400px;
+  }
+  
+  .listItem {
+    padding: 16px 0;
+  }
+  
+  .calendarCard {
+    margin-top: 0;
+    height: auto;
+    
+    :global {
+      .ant-picker-calendar-header {
+        padding: 10px 0;
+      }
+    }
+  }
+}
