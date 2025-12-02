@@ -64,7 +64,8 @@ const DashboardHome = () => {
                 }
             } catch (error) {
                 console.error('Fetch schedule error:', error)
-                message.error('获取课表失败')
+                const errorMessage = error instanceof Error ? error.message : (typeof error === 'string' ? error : '获取课表失败')
+                message.error(errorMessage)
             }
         }
         fetchSchedule()

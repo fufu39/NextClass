@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { Form, Input, Button, message, Switch, Tabs, Tag, Modal, Select, TimePicker } from 'antd'
 import { UserOutlined, LockOutlined, BellOutlined, SafetyOutlined, SettingOutlined } from '@ant-design/icons'
 import { getUserProfile, updateUserProfile } from '../../api/user'
+import { askCode, resetPassword } from '../../api/auth'
 import { getSubscriptionPreferences, subscribe, unsubscribe } from '../../api/subscription'
 import { useUserStore } from '../../stores/user'
+import { useCommonStore } from '../../stores/common'
 import dayjs from 'dayjs'
 import styles from './index.module.scss'
 
@@ -13,9 +15,32 @@ const Settings = () => {
   const [subscribeForm] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const { user: storeUser, setUser: setStoreUser } = useUserStore()
+  const { resetEmailEndTime, setResetEmailEndTime } = useCommonStore()
   const [emailSubscription, setEmailSubscription] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalLoading, setModalLoading] = useState(false)
+  const [sendCodeLoading, setSendCodeLoading] = useState(false)
+  const [countdown, setCountdown] = useState(0)
+
+  useEffect(() => {
+    const calculateCountdown = () => {
+      const now = Date.now()
+      const remaining = Math.max(0, Math.ceil((resetEmailEndTime - now) / 1000))
+      setCountdown(remaining)
+      return remaining
+    }
+
+    calculateCountdown()
+
+    const timer = setInterval(() => {
+      const remaining = calculateCountdown()
+      if (remaining <= 0) {
+        clearInterval(timer)
+      }
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [resetEmailEndTime])
 
   // Initialize form with store data immediately
   useEffect(() => {
@@ -93,19 +118,39 @@ const Settings = () => {
     }
   }
 
-  const handlePasswordChange = async () => {
-    // 暂时禁用API调用
-    // try {
-    //   await changePassword({
-    //     oldPassword: values.oldPassword,
-    //     newPassword: values.newPassword
-    //   })
-    //   message.success('密码修改成功')
-    //   passwordForm.resetFields()
-    // } catch {
-    //   message.error('密码修改失败')
-    // }
-    message.info('修改密码接口待开放')
+  const handleSendCode = async () => {
+    if (!storeUser?.email) {
+      message.error('无法获取用户邮箱')
+      return
+    }
+    setSendCodeLoading(true)
+    try {
+      await askCode(storeUser.email, 'reset')
+      message.success('验证码已发送，请查收')
+      setResetEmailEndTime(Date.now() + 60 * 1000)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setSendCodeLoading(false)
+    }
+  }
+
+  const handlePasswordChange = async (values: any) => {
+    if (!storeUser?.email) {
+      message.error('无法获取用户邮箱')
+      return
+    }
+    try {
+      await resetPassword({
+        email: storeUser.email,
+        code: values.code,
+        password: values.newPassword
+      })
+      message.success('密码修改成功')
+      passwordForm.resetFields()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleSubscriptionChange = async (checked: boolean) => {
@@ -213,12 +258,28 @@ const Settings = () => {
             onFinish={handlePasswordChange}
             className={styles.formSection}
           >
-            <Form.Item
-              label="当前密码"
-              name="oldPassword"
-              rules={[{ required: true, message: '请输入当前密码' }]}
-            >
-              <Input.Password size="large" prefix={<LockOutlined />} placeholder="请输入当前密码" />
+            <Form.Item label="验证码" required>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <Form.Item
+                  name="code"
+                  noStyle
+                  rules={[{ required: true, message: '请输入验证码' }]}
+                >
+                  <Input
+                    size="large"
+                    prefix={<SafetyOutlined />}
+                    placeholder={`请前往邮箱${storeUser?.email || ''}查看`}
+                  />
+                </Form.Item>
+                <Button
+                  size="large"
+                  onClick={handleSendCode}
+                  loading={sendCodeLoading}
+                  disabled={countdown > 0}
+                >
+                  {countdown > 0 ? `${countdown}s` : '发送验证码'}
+                </Button>
+              </div>
             </Form.Item>
 
             <Form.Item

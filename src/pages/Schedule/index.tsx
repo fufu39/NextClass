@@ -496,7 +496,7 @@ const Schedule = () => {
           <Button icon={<UploadOutlined />} onClick={handleImport} size="middle" type="primary" disabled={importing}>
             重新导入
           </Button>
-          <Button icon={<DeleteOutlined />} onClick={handleClearSchedule} size="middle" danger>
+          <Button icon={<DeleteOutlined />} onClick={handleClearSchedule} size="middle">
             清空课表
           </Button>
         </div>

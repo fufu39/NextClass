@@ -35,13 +35,14 @@ const AIChat = () => {
     try {
       const res = await getScheduleImportStatus()
       console.log(res);
-      
+
       if (res.code === 200) {
         setIsImported(res.data)
       }
     } catch (error) {
       console.error('Failed to check import status:', error)
-      message.error('检查课表导入状态失败')
+      const errorMessage = error instanceof Error ? error.message : (typeof error === 'string' ? error : '检查课表导入状态失败')
+      message.error(errorMessage)
     } finally {
       setCheckingStatus(false)
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { BulbOutlined, CloseOutlined, InfoCircleOutlined, ToolOutlined, AppstoreOutlined, HourglassOutlined } from '@ant-design/icons'
+import { BulbOutlined, CloseOutlined, InfoCircleOutlined, ToolOutlined, AppstoreOutlined, HourglassOutlined, MailOutlined } from '@ant-design/icons'
 import { motion, AnimatePresence } from 'framer-motion'
 import dayjs from 'dayjs'
 import styles from './index.module.scss'
@@ -96,8 +96,22 @@ const TipsOverlay = ({ onClose }: { onClose: () => void }) => {
           <ul>
             <li><strong>课表导入：</strong> 建议截取高清大图，放大课表界面至120%~150%截取效果更佳</li>
             <li><strong>操作频繁：</strong> 如果报错提示操作频繁，表示请求频率过高，请稍后重试</li>
-            <li><strong>邮件订阅：</strong> 响应式设计暂未设计，为方便日常查看，可在系统设置内开启课程邮件提醒</li>
+            <li><strong>邮件订阅：</strong> 响应式布局暂未设计，为方便日常查看，可在系统设置内开启课程邮件提醒</li>
           </ul>
+
+          <h2><ToolOutlined style={{ marginRight: 8 }} /> 开发中功能</h2>
+
+          <ul>
+            <li style={{ textDecoration: 'line-through', color: '#666' }}><strong>课程邮件提醒：</strong> 系统设置界面通知设置内添加课程邮件提醒逻辑，实现每日订阅推送</li>
+            <li style={{ textDecoration: 'line-through', color: '#666' }}><strong>清空课表按钮：</strong> 智能课表界面内添加清空课表按钮，以及显著的截图优化提示信息</li>
+            <li style={{ textDecoration: 'line-through', color: '#666' }}><strong>修改密码：</strong> 系统设置界面账号安全内重构界面，修改为获取邮件验证码以重置密码</li>
+            <li style={{ textDecoration: 'line-through', color: '#666' }}><strong>黑暗模式：</strong> 系统设置界面其他设置内添加黑暗模式，通过全局色调反转实现</li>
+          </ul>
+
+          <h2><HourglassOutlined style={{ marginRight: 8 }} /> 未开发功能</h2>
+          <p style={{ marginBottom: 0, lineHeight: '1.6' }}>
+            移动端响应式布局，个人资料修改，本周课程时长统计
+          </p>
 
           <h2><AppstoreOutlined style={{ marginRight: 8 }} /> 系统状态</h2>
           <div style={{ display: 'flex', gap: 24, marginBottom: 24 }}>
@@ -114,19 +128,14 @@ const TipsOverlay = ({ onClose }: { onClose: () => void }) => {
             </div>
           </div>
 
-          <h2><ToolOutlined style={{ marginRight: 8 }} /> 开发中功能</h2>
-
-          <ul>
-            <li><strong>课程邮件提醒：</strong> 系统设置界面通知设置内添加课程邮件提醒逻辑，实现每日订阅推送</li>
-            <li><strong>清空课表按钮：</strong> 智能课表界面内添加清空课表按钮，以及显著的截图优化提示信息</li>
-            <li><strong>修改密码：</strong> 系统设置界面账号安全内重构界面，修改为获取邮件验证码以重置密码</li>
-            <li><strong>黑暗模式：</strong> 系统设置界面其他设置内添加黑暗模式，通过全局色调反转实现</li>
-          </ul>
-
-          <h2><HourglassOutlined style={{ marginRight: 8 }} /> 未开发功能</h2>
-          <p style={{ marginBottom: 0, lineHeight: '1.6' }}>
-            移动端响应式布局，个人资料修改，本周课程时长统计
+          <h2><MailOutlined style={{ marginRight: 8 }} /> 联系方式</h2>
+          <p style={{ marginBottom: 12 }}>
+            如果您在使用过程中遇到任何Bug，欢迎通过以下方式联系我们：
           </p>
+          <ul>
+            <li>通过 <a href="https://github.com/fufu39/NextClass/issues" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>GitHub Issues</a> 报告Bug</li>
+            <li>发送邮件到 2090660718@qq.com</li>
+          </ul>
 
           <p style={{ marginTop: 60, textAlign: 'right', color: '#9ca3af', fontStyle: 'italic' }}>
             NextClass Team / 2025.11.30 - Now

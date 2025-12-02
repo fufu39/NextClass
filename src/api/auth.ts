@@ -42,6 +42,18 @@ export const askCode = async (email: string, type: string): Promise<RestBean<nul
   })
 }
 
+// 重置密码参数
+export interface ResetPasswordParams {
+  email: string
+  code: string
+  password: string
+}
+
+// 重置密码
+export const resetPassword = async (data: ResetPasswordParams): Promise<RestBean<null>> => {
+  return await http.post<RestBean<null>>('/auth/reset-password', data)
+}
+
 // 登录
 export const login = async (data: LoginParams): Promise<RestBean<AuthorizeVO>> => {
   const params = new URLSearchParams()

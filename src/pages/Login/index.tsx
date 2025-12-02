@@ -14,6 +14,7 @@ import {
 } from '@ant-design/icons'
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from 'framer-motion'
 import { useUserStore } from '../../stores/user'
+import { useCommonStore } from '../../stores/common'
 import { login, register, askCode, type RegisterParams } from '../../api/auth'
 import styles from './index.module.scss'
 
@@ -41,19 +42,30 @@ const Login = () => {
     }
   }, [token, navigate, message])
 
+  const { registerEmailEndTime, setRegisterEmailEndTime } = useCommonStore()
   // Timer state for verification code
   const [countdown, setCountdown] = useState(0)
   const [isSendingCode, setIsSendingCode] = useState(false)
 
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>
-    if (countdown > 0) {
-      timer = setTimeout(() => {
-        setCountdown((prev) => prev - 1)
-      }, 1000)
+    const calculateCountdown = () => {
+      const now = Date.now()
+      const remaining = Math.max(0, Math.ceil((registerEmailEndTime - now) / 1000))
+      setCountdown(remaining)
+      return remaining
     }
-    return () => clearTimeout(timer)
-  }, [countdown])
+
+    calculateCountdown()
+
+    const timer = setInterval(() => {
+      const remaining = calculateCountdown()
+      if (remaining <= 0) {
+        clearInterval(timer)
+      }
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [registerEmailEndTime])
 
   // Login form values state
   const [loginInitialValues, setLoginInitialValues] = useState({
@@ -172,7 +184,7 @@ const Login = () => {
       console.log(response)
       if (response.code === 200) {
         message.success('验证码已发送')
-        setCountdown(60)
+        setRegisterEmailEndTime(Date.now() + 60 * 1000)
       } else {
         message.error(response.message || '发送失败')
       }
