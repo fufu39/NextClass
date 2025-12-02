@@ -337,9 +337,9 @@ const Schedule = () => {
               <Dragger
                 fileList={fileList}
                 beforeUpload={(file) => {
-                  const isLt2M = file.size / 1024 / 1024 < 2;
-                  if (!isLt2M) {
-                    message.error('图片大小不能超过 2MB!');
+                  const isLt5M = file.size / 1024 / 1024 < 5;
+                  if (!isLt5M) {
+                    message.error('图片大小不能超过 5MB!');
                     return Upload.LIST_IGNORE;
                   }
                   const reader = new FileReader();
@@ -375,7 +375,7 @@ const Schedule = () => {
                       <InboxOutlined />
                     </p>
                     <p className="ant-upload-text">点击或拖拽上传文件</p>
-                    <p className="ant-upload-hint">支持 PNG, JPG, JPEG 格式 (最大2MB)</p>
+                    <p className="ant-upload-hint">支持 PNG, JPG, JPEG 格式 (最大5MB)</p>
                   </>
                 )}
               </Dragger>
@@ -413,6 +413,7 @@ const Schedule = () => {
               icon={<UploadOutlined />}
               onClick={handleImport}
               className={styles.uploadButton}
+              disabled={importing}
             >
               导入课表图片
             </Button>
@@ -456,7 +457,8 @@ const Schedule = () => {
           </div>
         </div>
 
-        <Button icon={<UploadOutlined />} onClick={handleImport} size="middle" type="primary">
+        <p>建议截取高清大图，放大课表界面至120%~150%截取效果更佳</p>
+        <Button icon={<UploadOutlined />} onClick={handleImport} size="middle" type="primary" disabled={importing}>
           重新导入
         </Button>
       </div>

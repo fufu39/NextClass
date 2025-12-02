@@ -245,7 +245,7 @@ const DashboardHome = () => {
                     {/* Today's Schedule List */}
                     <motion.div variants={itemVariants}>
                         <div className={styles.sectionHeader}>
-                            <Title level={4}>今日课程📚</Title>
+                            <Title level={4}>今日课程</Title>
                             {/* <Text className={styles.viewAll}>点击切换日期<RightOutlined /></Text> */}
                         </div>
                         <Card variant="borderless" className={styles.scheduleListCard}>
@@ -333,7 +333,7 @@ const DashboardHome = () => {
                     {/* Mini Calendar */}
                     <motion.div variants={itemVariants}>
                         <Card variant="borderless" className={styles.calendarCard}>
-                            <div style={{ fontWeight: 700, fontSize: 20 }}>日历📅</div>
+                            <div style={{ fontWeight: 700, fontSize: 20 }}>日历</div>
                             <Calendar
                                 fullscreen={false}
                                 value={selectedDate}

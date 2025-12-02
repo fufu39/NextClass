@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons'
 import { App, Avatar, Breadcrumb } from 'antd'
 import { useUserStore } from '../../stores/user'
+import { TipsButton } from '../../components/Tips'
 import styles from './index.module.scss'
 import logo from '../../assets/logo.png'
 
@@ -88,12 +89,15 @@ const DashboardLayout = () => {
       <div className={styles.mainContent}>
         <div className={styles.contentHeader}>
           <div>
-            <Breadcrumb
-              items={[
-                { title: 'NextClass' },
-                { title: activeMenu.label }
-              ]}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <Breadcrumb
+                items={[
+                  { title: 'NextClass' },
+                  { title: activeMenu.label }
+                ]}
+              />
+              <TipsButton />
+            </div>
           </div>
           <div
             className={styles.userProfile}
