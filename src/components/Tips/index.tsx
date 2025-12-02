@@ -114,17 +114,17 @@ const TipsOverlay = ({ onClose }: { onClose: () => void }) => {
           </p>
 
           <h2><AppstoreOutlined style={{ marginRight: 8 }} /> 系统状态</h2>
-          <div style={{ display: 'flex', gap: 24, marginBottom: 24 }}>
-            <div style={{ flex: 1, padding: '16px 24px', border: '1px solid #eee', borderRadius: 8 }}>
-              <div style={{ fontSize: 12, color: '#666', marginBottom: 4 }}>System Status</div>
-              <div style={{ display: 'flex', alignItems: 'center', color: '#22c55e', fontWeight: 600 }}>
-                <div style={{ width: 8, height: 8, background: '#22c55e', borderRadius: '50%', marginRight: 8 }}></div>
+          <div className={styles.systemStatus}>
+            <div className={styles.statusItem}>
+              <div className={styles.label}>System Status</div>
+              <div className={styles.operational}>
+                <div className={styles.dot}></div>
                 Operational
               </div>
             </div>
-            <div style={{ flex: 1, padding: '16px 24px', border: '1px solid #eee', borderRadius: 8 }}>
-              <div style={{ fontSize: 12, color: '#666', marginBottom: 4 }}>Last Update</div>
-              <div style={{ fontWeight: 600, color: '#333' }}>{lastUpdate}</div>
+            <div className={styles.statusItem}>
+              <div className={styles.label}>Last Update</div>
+              <div className={styles.value}>{lastUpdate}</div>
             </div>
           </div>
 

@@ -163,26 +163,29 @@
 
   p {
     margin-bottom: 8px;
+
     &:last-child {
       margin-bottom: 0;
     }
   }
 
-  ul, ol {
+  ul,
+  ol {
     padding-left: 20px;
     margin-bottom: 8px;
     list-style-type: disc;
   }
-  
+
   ol {
     list-style-type: decimal;
   }
 
   li {
     margin-bottom: 4px;
-    
+
     // 解决列表嵌套问题
-    & > ul, & > ol {
+    &>ul,
+    &>ol {
       margin-top: 4px;
     }
   }
@@ -191,27 +194,33 @@
     font-weight: 600;
     color: #111827; // 更深的颜色强调
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-weight: 600;
     margin-top: 16px;
     margin-bottom: 8px;
     line-height: 1.4;
     color: #111827;
-    
+
     &:first-child {
       margin-top: 0;
     }
   }
-  
+
   a {
     color: #2563eb;
     text-decoration: none;
+
     &:hover {
       text-decoration: underline;
     }
   }
-  
+
   code {
     background-color: rgba(0, 0, 0, 0.06);
     padding: 0.2em 0.4em;
@@ -219,7 +228,7 @@
     font-family: monospace;
     font-size: 0.9em;
   }
-  
+
   pre {
     background-color: #1f2937;
     color: #f9fafb;
@@ -227,14 +236,14 @@
     border-radius: 8px;
     overflow-x: auto;
     margin-bottom: 12px;
-    
+
     code {
       background-color: transparent;
       padding: 0;
       color: inherit;
     }
   }
-  
+
   blockquote {
     border-left: 4px solid #e5e7eb;
     padding-left: 12px;
@@ -242,18 +251,19 @@
     color: #4b5563;
     font-style: italic;
   }
-  
+
   table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 12px;
-    
-    th, td {
+
+    th,
+    td {
       border: 1px solid #e5e7eb;
       padding: 8px;
       text-align: left;
     }
-    
+
     th {
       background-color: #f9fafb;
       font-weight: 600;
@@ -317,10 +327,49 @@
 }
 
 @keyframes bounce {
-  0%, 80%, 100% {
+
+  0%,
+  80%,
+  100% {
     transform: scale(0);
   }
+
   40% {
     transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    height: 100dvh;
+  }
+
+  .chatContainer {
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .messageList {
+    padding: 16px !important;
+    padding-bottom: 130px !important; // 留出底部输入框的空间
+    overscroll-behavior: contain; // 防止滚动穿透
+  }
+
+  .inputArea {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom)); // 适配全面屏底部安全区
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+
+    // 确保在键盘弹出时输入框紧贴键盘
+    transform: translateZ(0);
   }
 }
