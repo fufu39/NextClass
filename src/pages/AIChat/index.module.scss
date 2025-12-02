@@ -123,6 +123,7 @@
       background-color: #f3f4f6;
       color: #1f2937;
       border-radius: 16px 16px 16px 4px;
+      padding: 16px 20px; // AI消息稍微增加padding
     }
   }
 }
@@ -155,6 +156,109 @@
   white-space: pre-wrap;
   word-break: break-word;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.markdownBody {
+  white-space: normal; // 覆盖父级的 pre-wrap，让 Markdown 自己控制换行
+
+  p {
+    margin-bottom: 8px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul, ol {
+    padding-left: 20px;
+    margin-bottom: 8px;
+    list-style-type: disc;
+  }
+  
+  ol {
+    list-style-type: decimal;
+  }
+
+  li {
+    margin-bottom: 4px;
+    
+    // 解决列表嵌套问题
+    & > ul, & > ol {
+      margin-top: 4px;
+    }
+  }
+
+  strong {
+    font-weight: 600;
+    color: #111827; // 更深的颜色强调
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    color: #111827;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  
+  a {
+    color: #2563eb;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  code {
+    background-color: rgba(0, 0, 0, 0.06);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+  
+  pre {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 12px;
+    
+    code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+    }
+  }
+  
+  blockquote {
+    border-left: 4px solid #e5e7eb;
+    padding-left: 12px;
+    margin-left: 0;
+    color: #4b5563;
+    font-style: italic;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 8px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #f9fafb;
+      font-weight: 600;
+    }
+  }
 }
 
 .inputArea {
@@ -213,91 +317,10 @@
 }
 
 @keyframes bounce {
-
-  0%,
-  80%,
-  100% {
+  0%, 80%, 100% {
     transform: scale(0);
   }
-
   40% {
     transform: scale(1);
-  }
-}
-
-@media (max-width: 768px) {
-  .notImported {
-    margin: 16px;
-    padding: 24px;
-
-    h2 {
-      font-size: 20px;
-    }
-
-    .description {
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .importBtn {
-      width: 100%;
-      height: 40px;
-      font-size: 15px;
-    }
-  }
-
-  .messageList {
-    padding: 16px;
-    gap: 16px;
-  }
-
-  .messageItem {
-    max-width: 95%;
-    gap: 10px;
-
-    .messageContent {
-      padding: 10px 14px;
-      font-size: 14px;
-    }
-  }
-
-  .avatar {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-  }
-
-  .inputArea {
-    padding: 12px;
-    gap: 8px;
-
-    .inputWrapper textarea {
-      padding: 8px 12px;
-      font-size: 14px;
-    }
-
-    // Override inline styles for the send button
-    :global(.ant-btn) {
-      padding: 8px 12px !important;
-      height: 36px !important;
-      font-size: 14px;
-    }
-  }
-
-  .emptyPrompt {
-    min-height: 30vh;
-  }
-
-  .emptyIcon {
-    font-size: 48px;
-    margin-bottom: 12px;
-  }
-
-  .emptyTitle {
-    font-size: 18px;
-  }
-
-  .emptySub {
-    font-size: 14px;
   }
 }

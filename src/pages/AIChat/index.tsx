@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Button, Input, message, Spin } from 'antd'
 import { RobotOutlined, UserOutlined, SendOutlined, ImportOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import dayjs from 'dayjs'
 import styles from './index.module.scss'
 import { getScheduleImportStatus, askScheduleAI } from '../../api/schedule'
@@ -75,7 +77,7 @@ const AIChat = () => {
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
           type: 'ai',
-          content: res.data
+          content: res.data.answer
         }
         setMessages(prev => [...prev, aiMessage])
       } else {
@@ -99,7 +101,7 @@ const AIChat = () => {
   if (checkingStatus) {
     return (
       <div className={styles.container} style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <Spin size="large" tip="正在初始化 AI 助手..." />
+        <Spin size="large" />
       </div>
     )
   }
@@ -148,7 +150,15 @@ const AIChat = () => {
                 </div>
               )}
               <div className={styles.messageContent}>
-                {msg.content}
+                {msg.type === 'ai' ? (
+                  <div className={styles.markdownBody}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  msg.content
+                )}
               </div>
               {msg.type === 'user' && (
                 <div className={`${styles.avatar} ${styles.userAvatar}`}>

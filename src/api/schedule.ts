@@ -63,9 +63,18 @@ export interface AskParams {
   date: string
 }
 
-export const askScheduleAI = async (params: AskParams): Promise<RestBean<string>> => {
-  const res = await http.post<RestBean<string>>('/schedule/ask', params)
-  return res as unknown as RestBean<string>
+export interface AskResponse {
+  answer: string
+  context: {
+    date: string
+    period: string
+    items: any[]
+  }
+}
+
+export const askScheduleAI = async (params: AskParams): Promise<RestBean<AskResponse>> => {
+  const res = await http.post<RestBean<AskResponse>>('/schedule/ask', params)
+  return res as unknown as RestBean<AskResponse>
 }
 
 // 清空课表

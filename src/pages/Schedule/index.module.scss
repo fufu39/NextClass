@@ -274,20 +274,51 @@
     .titleGroup {
       width: 100%;
       justify-content: space-between;
+      flex-wrap: nowrap;
+
+      h4 {
+        white-space: nowrap;
+        font-size: 16px !important;
+      }
     }
 
     .controls {
-      width: 100%;
+      flex-shrink: 0;
       justify-content: flex-end;
     }
 
     // Hide the "suggest screenshot" text
-    > div:last-child {
+    >div:last-child {
       width: 100%;
-      justify-content: space-between;
-      
+      justify-content: flex-end; // Align buttons to the right
+      gap: 8px; // Space between buttons
+      display: flex !important; // Ensure flex display
+      flex-direction: row !important; // Force row direction
+
       span {
-        display: none;
+        display: none !important;
+      }
+
+      button {
+        flex: initial;
+        padding: 4px 12px;
+        font-size: 12px;
+        width: auto;
+        height: 32px; // Fix button height
+        display: inline-flex; // Ensure flex for icon + text alignment
+        align-items: center;
+        justify-content: center;
+
+        // Ensure icon and text are visible
+        span {
+          display: inline-block !important;
+          margin-right: 0;
+        }
+
+        // Add margin to the icon
+        .anticon {
+          margin-right: 4px;
+        }
       }
     }
   }
@@ -307,7 +338,7 @@
     flex: none;
     height: auto;
   }
-  
+
   .gridContent {
     min-height: auto;
   }
@@ -325,7 +356,7 @@
       font-size: 10px;
       padding: 0;
     }
-    
+
     .dayHeader {
       font-size: 12px;
       padding: 0 2px;
@@ -333,15 +364,31 @@
   }
 
   .timeRow {
-    min-height: 50px;
-    
+    height: 50px !important;
+    min-height: 50px !important;
+    flex: none !important;
+
+    // Ensure break row maintains the 2:1 ratio (60:30 -> 50:25)
+    // to keep absolute positioning correct
+    &.breakRow {
+      height: 25px !important;
+      min-height: 25px !important;
+      flex: none !important;
+
+      .breakLabel {
+        font-size: 10px;
+        letter-spacing: 1px;
+      }
+    }
+
     .timeSlot {
       width: 30px;
       padding: 0;
-      
+
       .sectionIndex {
         font-size: 12px;
       }
+
       .timeRange {
         display: none;
       }
@@ -353,27 +400,38 @@
   }
 
   .courseContent {
-    padding: 4px 2px;
+    padding: 4px 1px; // Reduce horizontal padding
     flex-direction: row;
     gap: 2px;
     align-items: flex-start;
-    
+    border-left: none !important; // Remove left colored border
+
     .courseName {
       writing-mode: vertical-lr;
       font-size: 12px;
       line-height: 1.2;
       margin-bottom: 0;
-      word-break: break-all;
+      word-break: keep-all; // Prevent breaking
+      white-space: nowrap; // Force single column
+      overflow: hidden;
+      text-overflow: ellipsis; // Show ... at bottom
+      max-height: 100%; // Ensure it stays within container height
     }
-    
+
     .courseInfo {
       writing-mode: vertical-lr;
+      text-orientation: upright; // Stack characters vertically (7-0-5)
       font-size: 10px;
-      line-height: 1.2;
+      line-height: 1.1; // Tighter line height for stacked numbers
       opacity: 0.9;
-      word-break: break-all;
+      word-break: keep-all; // Prevent breaking
+      letter-spacing: -1px; // Tighter spacing for numbers
+      white-space: nowrap; // Force single column
+      overflow: hidden;
+      text-overflow: ellipsis; // Show ... at bottom
+      max-height: 100%; // Ensure it stays within container height
 
-      // Hide teacher name (3rd child)
+      // Show teacher name (3rd child)
       &:nth-child(3) {
         display: none;
       }
@@ -385,7 +443,7 @@
     font-size: 10px;
     letter-spacing: 2px;
   }
-  
+
   .scheduleCard:hover {
     transform: none;
   }
