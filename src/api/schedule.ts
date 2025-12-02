@@ -67,3 +67,9 @@ export const askScheduleAI = async (params: AskParams): Promise<RestBean<string>
   const res = await http.post<RestBean<string>>('/schedule/ask', params)
   return res as unknown as RestBean<string>
 }
+
+// 清空课表
+export const clearSchedule = async (): Promise<RestBean<null>> => {
+  const res = await http.post<RestBean<null>>('/schedule/clear')
+  return res as unknown as RestBean<null>
+}

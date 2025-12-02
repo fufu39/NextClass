@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
 import { Button, Select, Spin, Card, Typography, App, Modal, Form, Input, DatePicker, Upload, Checkbox, Image, Popover } from 'antd';
-import { UploadOutlined, CalendarOutlined, LeftOutlined, RightOutlined, InboxOutlined, EnvironmentOutlined, UserOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { UploadOutlined, CalendarOutlined, LeftOutlined, RightOutlined, InboxOutlined, EnvironmentOutlined, UserOutlined, ClockCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import type { CourseVO } from '../../api/schedule';
-import { getScheduleImportStatus, getScheduleByWeek, uploadScheduleImage } from '../../api/schedule';
+import { getScheduleImportStatus, getScheduleByWeek, uploadScheduleImage, clearSchedule } from '../../api/schedule';
 import styles from './index.module.scss';
 import defaultClassImg from '../../assets/class.png';
 
@@ -266,15 +266,49 @@ const Schedule = () => {
     return (weightSum / TOTAL_WEIGHT) * 100;
   };
 
+  const handleClearSchedule = async () => {
+    Modal.confirm({
+      title: '确认清空课表？',
+      content: '清空后将无法恢复，是否继续？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          const res = await clearSchedule();
+          if (res.code === 200) {
+            message.success('课表已清空');
+            setIsImported(false);
+            setScheduleData([]);
+            setWeek(undefined);
+            checkImportStatus();
+          } else {
+            message.error(res.message || '清空失败');
+          }
+        } catch (error) {
+          message.error('操作失败');
+        }
+      }
+    });
+  };
+
   const modalElement = (
     <Modal
       title="导入课表"
       open={isModalOpen}
       onCancel={handleModalCancel}
-      onOk={handleUploadSubmit}
-      confirmLoading={importing}
       width={560}
       destroyOnClose
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          <div style={{ flex: 1, textAlign: 'left', fontSize: '18px', color: '#ff4d4f', lineHeight: '1.3', margin: '0 32px 0 12px' }}>
+            建议截取高清大图，放大课表界面至120% ~ 150%截取效果更佳
+          </div>
+          <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+            <Button onClick={handleModalCancel}>取消</Button>
+            <Button type="primary" onClick={handleUploadSubmit} loading={importing}>确定</Button>
+          </div>
+        </div>
+      }
     >
       <Form form={form} layout="vertical" preserve={false}>
         <Form.Item
@@ -457,10 +491,15 @@ const Schedule = () => {
           </div>
         </div>
 
-        <p>建议截取高清大图，放大课表界面至120%~150%截取效果更佳</p>
-        <Button icon={<UploadOutlined />} onClick={handleImport} size="middle" type="primary" disabled={importing}>
-          重新导入
-        </Button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ color: '#666', fontSize: '18px', marginRight: '12px' }}>建议截取高清大图，放大课表界面至120%~150%截取效果更佳</span>
+          <Button icon={<UploadOutlined />} onClick={handleImport} size="middle" type="primary" disabled={importing}>
+            重新导入
+          </Button>
+          <Button icon={<DeleteOutlined />} onClick={handleClearSchedule} size="middle" danger>
+            清空课表
+          </Button>
+        </div>
       </div>
 
       {/* Schedule Grid */}

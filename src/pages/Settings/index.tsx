@@ -35,16 +35,16 @@ const Settings = () => {
         const userData = await getUserProfile()
         // console.log('userData', userData);
         form.setFieldsValue({
-          username: userData.username,
-          email: userData.email,
+          username: userData.username || storeUser?.username,
+          email: userData.email || storeUser?.email,
         })
 
         // Update store with latest data
         if (storeUser) {
           setStoreUser({
             ...storeUser,
-            email: userData.email,
-            avatar: userData.avatar
+            email: userData.email || storeUser.email,
+            avatar: userData.avatar || storeUser.avatar
           })
         }
       } catch (error) {
@@ -71,17 +71,18 @@ const Settings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // Only run on mount
 
-  const handleUpdateProfile = async (values: { username: string }) => {
+  const handleUpdateProfile = async (values: { username: string, email: string }) => {
     setLoading(true)
     try {
       // Simulate API or Real API
-      await updateUserProfile({ username: values.username })
+      await updateUserProfile({ username: values.username, email: values.email })
 
       // Update store
       if (storeUser) {
         setStoreUser({
           ...storeUser,
-          username: values.username
+          username: values.username,
+          email: values.email
         })
       }
       message.success('个人资料更新成功')
@@ -315,7 +316,7 @@ const Settings = () => {
       children: (
         <div className={styles.tabContent}>
           <div className={styles.sectionTitle}>
-            <h2>其他设置（待开放）</h2>
+            <h2>其他设置</h2>
             <p>更多个性化选项</p>
           </div>
           <div style={{ padding: '40px 0', textAlign: 'center', color: '#ccc' }}>

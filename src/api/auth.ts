@@ -10,6 +10,7 @@ export interface AuthorizeVO {
   role: string
   token: string
   expire: string
+  email: string
 }
 
 export interface RestBean<T> {

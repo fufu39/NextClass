@@ -100,7 +100,8 @@ const Login = () => {
         setUser({
           username: authData.username,
           role: authData.role,
-          expire: authData.expire
+          expire: authData.expire,
+          email: authData.email
         })
         setToken(authData.token)
         localStorage.setItem('token', authData.token)
