@@ -322,7 +322,7 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 20px 16px;
+    padding: 20px 0px;
 
     &::before,
     &::after {
@@ -406,6 +406,11 @@
           min-height: auto;
           padding-bottom: 20px;
         }
+
+        .ant-tabs-tabpane,
+        .ant-tabs-tabpane-active {
+          padding-left: 0 !important;
+        }
       }
     }
   }
@@ -429,7 +434,7 @@
   }
 
   .tabContent {
-    padding: 20px 16px;
+    padding: 10px 10px;
     max-width: 100%;
   }
 

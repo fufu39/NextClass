@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Button, Input, message, Spin } from 'antd'
+import { Button, Input, message, Spin, Grid } from 'antd'
 import { RobotOutlined, UserOutlined, SendOutlined, ImportOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
@@ -24,6 +24,8 @@ const AIChat = () => {
   const [inputValue, setInputValue] = useState('')
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const { md } = Grid.useBreakpoint()
 
   useEffect(() => {
     checkImportStatus()
@@ -191,7 +193,7 @@ const AIChat = () => {
               value={inputValue}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="输入你的问题，例如：今天下午有什么课？"
+              placeholder={md ? "输入你的问题，例如：今天下午有什么课？" : "输入你的问题"}
               autoSize={{ minRows: 1, maxRows: 4 }}
             />
           </div>
