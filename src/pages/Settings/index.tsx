@@ -21,6 +21,12 @@ const Settings = () => {
   const [modalLoading, setModalLoading] = useState(false)
   const [sendCodeLoading, setSendCodeLoading] = useState(false)
   const [countdown, setCountdown] = useState(0)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  useEffect(() => {
+    const htmlElement = document.documentElement
+    setIsDarkMode(htmlElement.getAttribute('theme') === 'dark-mode')
+  }, [])
 
   useEffect(() => {
     const calculateCountdown = () => {
@@ -210,6 +216,19 @@ const Settings = () => {
     }
   }
 
+  const handleThemeChange = (checked: boolean) => {
+    const htmlElement = document.documentElement
+    if (checked) {
+      htmlElement.setAttribute('theme', 'dark-mode')
+      setIsDarkMode(true)
+      message.success('已开启黑暗模式')
+    } else {
+      htmlElement.removeAttribute('theme')
+      setIsDarkMode(false)
+      message.success('已关闭黑暗模式')
+    }
+  }
+
   const items = [
     {
       key: 'notification',
@@ -380,7 +399,21 @@ const Settings = () => {
             <h2>其他设置</h2>
             <p>更多个性化选项</p>
           </div>
-          <div style={{ padding: '40px 0', textAlign: 'center', color: '#ccc' }}>
+
+          <div className={styles.notificationItem}>
+            <div className={styles.info}>
+              <h4>黑暗模式</h4>
+              <p>开启色调反转，体验不一样的视觉效果</p>
+            </div>
+            <Switch
+              checked={isDarkMode}
+              onChange={handleThemeChange}
+              checkedChildren="开启"
+              unCheckedChildren="关闭"
+            />
+          </div>
+
+          <div style={{ padding: '20px 0', textAlign: 'center', color: '#ccc' }}>
             更多功能正在开发中......
           </div>
         </div>

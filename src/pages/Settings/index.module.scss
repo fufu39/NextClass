@@ -207,7 +207,7 @@
     //   padding: 0;
     //   height: auto;
     //   font-size: 13px;
-
+    //
     //   &:hover{
     //     color: #1890ff;
     //   }
@@ -311,5 +311,11 @@
       line-height: 1.6;
       max-width: 450px;
     }
+  }
+}
+
+:global {
+  html[theme='dark-mode'] {
+    filter: invert(1) hue-rotate(180deg);
   }
 }
