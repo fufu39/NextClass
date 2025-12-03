@@ -13,6 +13,7 @@ import {
 import { App, Avatar, Breadcrumb, Button } from 'antd'
 import { useUserStore } from '../../stores/user'
 import { TipsButton } from '../../components/Tips'
+import AppTour from '../../components/AppTour'
 import styles from './index.module.scss'
 import logo from '../../assets/logo.png'
 
@@ -79,6 +80,7 @@ const DashboardLayout = () => {
           {menuItems.map(item => (
             <div
               key={item.key}
+              id={`nav-item-${item.key}`}
               className={`${styles.menuItem} ${activeMenu.key === item.key ? styles.active : ''}`}
               onClick={() => handleMenuClick(item.key)}
             >
@@ -119,7 +121,8 @@ const DashboardLayout = () => {
                   ]}
                 />
               </div>
-              <TipsButton />
+              <AppTour />
+              <TipsButton id="tips-btn" />
             </div>
           </div>
           <div

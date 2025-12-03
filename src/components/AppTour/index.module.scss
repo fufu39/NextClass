@@ -1,0 +1,38 @@
+.tourWrapper {
+  display: inline-flex;
+  align-items: center;
+  // margin-right removed to rely on parent gap
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.tourBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  color: #222;
+  font-size: 18px;
+  margin-left: 12px;
+
+  &:hover {
+    background: #1f2937;
+    border-color: #1f2937;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

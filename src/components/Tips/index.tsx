@@ -5,12 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import dayjs from 'dayjs'
 import styles from './index.module.scss'
 
-export const TipsButton = () => {
+export const TipsButton = ({ id }: { id?: string }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <>
-      <div className={styles.triggerWrapper} onClick={() => setIsOpen(true)}>
+      <div id={id} className={styles.triggerWrapper} onClick={() => setIsOpen(true)}>
         <div className={styles.triggerBtn}>
           <div className={styles.icon}>
             <BulbOutlined />
